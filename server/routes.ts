@@ -187,7 +187,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Simulate AI response based on message content
-      let aiResponse = {
+      let aiResponse: {
+        role: string;
+        content: string;
+        timestamp: string;
+        suggestions: any[];
+      } = {
         role: "assistant",
         content: "I'm here to help you with property searches and room designs. Could you please provide more specific details about what you're looking for?",
         timestamp: new Date().toISOString(),
