@@ -9,6 +9,7 @@ import PropertySearch from "@/pages/property-search";
 import DesignRoom from "@/pages/design-room";
 import AiAssistant from "@/pages/ai-assistant";
 import BookConsultation from "@/pages/book-consultation";
+import Checkout from "@/pages/checkout";
 import Navbar from "@/components/navbar";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
         <Route path="/design" component={DesignRoom} />
         <Route path="/ai" component={AiAssistant} />
         <Route path="/booking" component={BookConsultation} />
+        <Route path="/checkout" component={Checkout} />
         <Route component={NotFound} />
       </Switch>
     </div>

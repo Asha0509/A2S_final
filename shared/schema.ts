@@ -97,6 +97,45 @@ export const savedProperties = pgTable("saved_properties", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const furnitureItems = pgTable("furniture_items", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  category: text("category").notNull(), // 'living_room', 'bedroom', 'kitchen', 'dining'
+  subcategory: text("subcategory").notNull(), // 'sofa', 'bed', 'table', etc.
+  price: integer("price").notNull(),
+  description: text("description"),
+  dimensions: text("dimensions"),
+  material: text("material"),
+  color: text("color"),
+  imageUrl: text("image_url"),
+  installationTime: text("installation_time"),
+  roomTypes: text("room_types").array().default([]),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const cartItems = pgTable("cart_items", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id),
+  furnitureId: varchar("furniture_id").references(() => furnitureItems.id),
+  roomDesignId: varchar("room_design_id").references(() => roomDesigns.id),
+  quantity: integer("quantity").default(1),
+  position: jsonb("position").default({}), // x, y coordinates in room
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const orders = pgTable("orders", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id),
+  roomDesignId: varchar("room_design_id").references(() => roomDesigns.id),
+  items: jsonb("items").default([]), // cart items with details
+  totalAmount: integer("total_amount").notNull(),
+  installationDate: text("installation_date"),
+  paymentMethod: text("payment_method"),
+  paymentStatus: text("payment_status").default("pending"), // 'pending', 'completed', 'failed'
+  orderStatus: text("order_status").default("processing"), // 'processing', 'confirmed', 'delivered', 'installed'
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -134,6 +173,21 @@ export const insertSavedPropertySchema = createInsertSchema(savedProperties).omi
   createdAt: true,
 });
 
+export const insertFurnitureItemSchema = createInsertSchema(furnitureItems).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertCartItemSchema = createInsertSchema(cartItems).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertOrderSchema = createInsertSchema(orders).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -155,3 +209,12 @@ export type AiChat = typeof aiChats.$inferSelect;
 
 export type InsertSavedProperty = z.infer<typeof insertSavedPropertySchema>;
 export type SavedProperty = typeof savedProperties.$inferSelect;
+
+export type InsertFurnitureItem = z.infer<typeof insertFurnitureItemSchema>;
+export type FurnitureItem = typeof furnitureItems.$inferSelect;
+
+export type InsertCartItem = z.infer<typeof insertCartItemSchema>;
+export type CartItem = typeof cartItems.$inferSelect;
+
+export type InsertOrder = z.infer<typeof insertOrderSchema>;
+export type Order = typeof orders.$inferSelect;

@@ -5,7 +5,10 @@ import {
   type Consultant, type InsertConsultant,
   type Booking, type InsertBooking,
   type AiChat, type InsertAiChat,
-  type SavedProperty, type InsertSavedProperty
+  type SavedProperty, type InsertSavedProperty,
+  type FurnitureItem, type InsertFurnitureItem,
+  type CartItem, type InsertCartItem,
+  type Order, type InsertOrder
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -52,6 +55,22 @@ export interface IStorage {
   getSavedPropertiesByUser(userId: string): Promise<SavedProperty[]>;
   saveProperty(userId: string, propertyId: string): Promise<SavedProperty>;
   unsaveProperty(userId: string, propertyId: string): Promise<boolean>;
+
+  // Furniture Items
+  getFurnitureByRoom(roomType: string): Promise<FurnitureItem[]>;
+  getFurnitureItem(id: string): Promise<FurnitureItem | undefined>;
+
+  // Cart Items
+  getCartByUser(userId: string): Promise<CartItem[]>;
+  addToCart(cartItem: InsertCartItem): Promise<CartItem>;
+  updateCartItem(id: string, quantity: number): Promise<CartItem | undefined>;
+  removeFromCart(id: string): Promise<boolean>;
+  clearCart(userId: string): Promise<boolean>;
+
+  // Orders
+  getOrdersByUser(userId: string): Promise<Order[]>;
+  createOrder(order: InsertOrder): Promise<Order>;
+  getOrder(id: string): Promise<Order | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -62,6 +81,9 @@ export class MemStorage implements IStorage {
   private bookings: Map<string, Booking> = new Map();
   private aiChats: Map<string, AiChat> = new Map();
   private savedProperties: Map<string, SavedProperty> = new Map();
+  private furnitureItems: Map<string, FurnitureItem> = new Map();
+  private cartItems: Map<string, CartItem> = new Map();
+  private orders: Map<string, Order> = new Map();
 
   constructor() {
     this.seedData();
@@ -81,7 +103,11 @@ export class MemStorage implements IStorage {
         sqft: 1250,
         amenities: ["Gym", "Swimming Pool", "Security", "Parking"],
         tags: ["Verified", "New"],
-        images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"],
+        images: [
+          "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+          "https://images.unsplash.com/photo-1591474200742-8e512e6f98f8?w=400",
+          "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400"
+        ],
         ownerName: "Prestige Builders",
         ownerContact: "+91 98765 43210",
         isVerified: true,
@@ -100,7 +126,11 @@ export class MemStorage implements IStorage {
         tenantPreference: "Family",
         amenities: ["Security", "Parking", "Balcony"],
         tags: ["Owner Posted", "Pet Friendly"],
-        images: ["https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400"],
+        images: [
+          "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400",
+          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+          "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400"
+        ],
         ownerName: "Rajesh Kumar",
         ownerContact: "+91 98765 43211",
         isVerified: true,
@@ -116,7 +146,11 @@ export class MemStorage implements IStorage {
         landPurpose: "commercial",
         amenities: ["Highway Access", "Clear Title"],
         tags: ["Commercial", "Prime Location"],
-        images: ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"],
+        images: [
+          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400",
+          "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400",
+          "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=400"
+        ],
         ownerName: "Coastal Properties",
         ownerContact: "+91 98765 43212",
         isVerified: true,
@@ -132,7 +166,11 @@ export class MemStorage implements IStorage {
         sqft: 2800,
         amenities: ["Swimming Pool", "Garden", "Security", "Clubhouse"],
         tags: ["Premium", "Pool"],
-        images: ["https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=400"],
+        images: [
+          "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=400",
+          "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
+          "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=400"
+        ],
         ownerName: "Coastal Properties",
         ownerContact: "+91 98765 43213",
         isPremium: true,
@@ -151,7 +189,11 @@ export class MemStorage implements IStorage {
         tenantPreference: "Bachelor",
         amenities: ["Gym", "Security", "WiFi"],
         tags: ["Fully Furnished", "Bachelor Friendly"],
-        images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400"],
+        images: [
+          "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+          "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=400",
+          "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=400"
+        ],
         ownerName: "Priya Sharma",
         ownerContact: "+91 98765 43214",
         isVerified: true,
@@ -167,7 +209,11 @@ export class MemStorage implements IStorage {
         landPurpose: "residential",
         amenities: ["Clear Title", "Road Access"],
         tags: ["Residential", "Clear Title"],
-        images: ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"],
+        images: [
+          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400",
+          "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400",
+          "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400"
+        ],
         ownerName: "Metro Properties",
         ownerContact: "+91 98765 43215",
         isVerified: true,
@@ -176,6 +222,122 @@ export class MemStorage implements IStorage {
 
     sampleProperties.forEach(property => {
       this.createProperty(property);
+    });
+
+    // Seed furniture items
+    const sampleFurniture: InsertFurnitureItem[] = [
+      // Living Room Furniture
+      {
+        name: "Modern L-Shaped Sofa",
+        category: "living_room",
+        subcategory: "sofa",
+        price: 45000,
+        description: "Comfortable 6-seater L-shaped sofa with premium fabric",
+        dimensions: "240cm x 160cm x 85cm",
+        material: "Premium Fabric",
+        color: "Charcoal Grey",
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400",
+        installationTime: "2-3 hours",
+        roomTypes: ["living_room"]
+      },
+      {
+        name: "Glass Coffee Table",
+        category: "living_room",
+        subcategory: "table",
+        price: 18000,
+        description: "Elegant tempered glass coffee table with metal legs",
+        dimensions: "120cm x 70cm x 45cm",
+        material: "Tempered Glass & Metal",
+        color: "Clear Glass",
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+        installationTime: "1 hour",
+        roomTypes: ["living_room"]
+      },
+      {
+        name: "Entertainment Unit",
+        category: "living_room",
+        subcategory: "storage",
+        price: 32000,
+        description: "Wall-mounted TV unit with storage compartments",
+        dimensions: "180cm x 40cm x 35cm",
+        material: "MDF with Laminate",
+        color: "Walnut Brown",
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+        installationTime: "3-4 hours",
+        roomTypes: ["living_room"]
+      },
+      // Bedroom Furniture
+      {
+        name: "Queen Size Bed",
+        category: "bedroom",
+        subcategory: "bed",
+        price: 38000,
+        description: "Upholstered queen size bed with storage",
+        dimensions: "160cm x 200cm x 120cm",
+        material: "Engineered Wood & Fabric",
+        color: "Beige",
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+        installationTime: "2-3 hours",
+        roomTypes: ["bedroom"]
+      },
+      {
+        name: "Wardrobe 3-Door",
+        category: "bedroom",
+        subcategory: "storage",
+        price: 55000,
+        description: "3-door wardrobe with mirror and drawers",
+        dimensions: "180cm x 60cm x 200cm",
+        material: "Engineered Wood",
+        color: "White & Brown",
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+        installationTime: "4-5 hours",
+        roomTypes: ["bedroom"]
+      },
+      {
+        name: "Bedside Table",
+        category: "bedroom",
+        subcategory: "table",
+        price: 12000,
+        description: "Compact bedside table with drawer",
+        dimensions: "40cm x 35cm x 60cm",
+        material: "Solid Wood",
+        color: "Natural Oak",
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+        installationTime: "30 minutes",
+        roomTypes: ["bedroom"]
+      },
+      // Kitchen Furniture
+      {
+        name: "Dining Table Set",
+        category: "kitchen",
+        subcategory: "table",
+        price: 42000,
+        description: "6-seater dining table with chairs",
+        dimensions: "180cm x 90cm x 75cm",
+        material: "Solid Wood",
+        color: "Mahogany",
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+        installationTime: "2-3 hours",
+        roomTypes: ["kitchen", "dining"]
+      },
+      {
+        name: "Kitchen Island",
+        category: "kitchen",
+        subcategory: "storage",
+        price: 68000,
+        description: "Modular kitchen island with granite top",
+        dimensions: "120cm x 60cm x 90cm",
+        material: "Granite & Wood",
+        color: "Black Granite",
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+        installationTime: "4-6 hours",
+        roomTypes: ["kitchen"]
+      }
+    ];
+
+    sampleFurniture.forEach(furniture => {
+      const id = Math.random().toString(36).substring(2, 15);
+      this.furnitureItems.set(id, { id, ...furniture, createdAt: new Date() });
     });
 
     // Seed consultants
@@ -425,6 +587,73 @@ export class MemStorage implements IStorage {
       return true;
     }
     return false;
+  }
+
+  // Furniture Items
+  async getFurnitureByRoom(roomType: string): Promise<FurnitureItem[]> {
+    return Array.from(this.furnitureItems.values()).filter(
+      item => item.roomTypes.includes(roomType)
+    );
+  }
+
+  async getFurnitureItem(id: string): Promise<FurnitureItem | undefined> {
+    return this.furnitureItems.get(id);
+  }
+
+  // Cart Items
+  async getCartByUser(userId: string): Promise<CartItem[]> {
+    return Array.from(this.cartItems.values()).filter(item => item.userId === userId);
+  }
+
+  async addToCart(cartItem: InsertCartItem): Promise<CartItem> {
+    const id = randomUUID();
+    const newCartItem: CartItem = {
+      id,
+      ...cartItem,
+      createdAt: new Date(),
+    };
+    this.cartItems.set(id, newCartItem);
+    return newCartItem;
+  }
+
+  async updateCartItem(id: string, quantity: number): Promise<CartItem | undefined> {
+    const cartItem = this.cartItems.get(id);
+    if (cartItem) {
+      cartItem.quantity = quantity;
+      this.cartItems.set(id, cartItem);
+      return cartItem;
+    }
+    return undefined;
+  }
+
+  async removeFromCart(id: string): Promise<boolean> {
+    return this.cartItems.delete(id);
+  }
+
+  async clearCart(userId: string): Promise<boolean> {
+    const userCartItems = Array.from(this.cartItems.values()).filter(item => item.userId === userId);
+    userCartItems.forEach(item => this.cartItems.delete(item.id));
+    return true;
+  }
+
+  // Orders
+  async getOrdersByUser(userId: string): Promise<Order[]> {
+    return Array.from(this.orders.values()).filter(order => order.userId === userId);
+  }
+
+  async createOrder(order: InsertOrder): Promise<Order> {
+    const id = randomUUID();
+    const newOrder: Order = {
+      id,
+      ...order,
+      createdAt: new Date(),
+    };
+    this.orders.set(id, newOrder);
+    return newOrder;
+  }
+
+  async getOrder(id: string): Promise<Order | undefined> {
+    return this.orders.get(id);
   }
 }
 

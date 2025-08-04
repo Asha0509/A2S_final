@@ -1,7 +1,14 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertPropertySchema, insertRoomDesignSchema, insertBookingSchema, insertAiChatSchema } from "@shared/schema";
+import { 
+  insertPropertySchema, 
+  insertRoomDesignSchema, 
+  insertBookingSchema, 
+  insertAiChatSchema,
+  insertCartItemSchema,
+  insertOrderSchema
+} from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Properties
@@ -198,7 +205,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           content: "I found some great properties that match your requirements! Here are my top recommendations:",
           timestamp: new Date().toISOString(),
           suggestions: relevantProperties.map(p => ({
-            type: "property",
+            type: "property" as const,
             id: p.id,
             title: p.title,
             location: p.location,
@@ -213,7 +220,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           content: "Perfect choice! I can help you create beautiful room designs. Here's a concept based on your preferences:",
           timestamp: new Date().toISOString(),
           suggestions: [{
-            type: "design",
+            type: "design" as const,
             title: "Modern Living Room Design",
             description: "Features: Teal accent wall, wooden furniture, modern lighting",
             image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300",
@@ -250,7 +257,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const savedProperties = await storage.getSavedPropertiesByUser(userId);
       const propertiesWithDetails = await Promise.all(
         savedProperties.map(async (sp) => {
-          const property = await storage.getProperty(sp.propertyId);
+          const property = await storage.getProperty(sp.propertyId || "");
           return { ...sp, property };
         })
       );
@@ -282,6 +289,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     } catch (error) {
       res.status(500).json({ message: "Failed to unsave property" });
+    }
+  });
+
+  // Furniture Items
+  app.get("/api/furniture", async (req, res) => {
+    try {
+      const roomType = req.query.roomType as string;
+      const furniture = await storage.getFurnitureByRoom(roomType || 'living_room');
+      res.json(furniture);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch furniture" });
+    }
+  });
+
+  app.get("/api/furniture/:id", async (req, res) => {
+    try {
+      const furniture = await storage.getFurnitureItem(req.params.id);
+      if (!furniture) {
+        return res.status(404).json({ message: "Furniture not found" });
+      }
+      res.json(furniture);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch furniture" });
+    }
+  });
+
+  // Cart Items
+  app.get("/api/cart/:userId", async (req, res) => {
+    try {
+      const cartItems = await storage.getCartByUser(req.params.userId);
+      const cartWithDetails = await Promise.all(
+        cartItems.map(async (item) => {
+          const furniture = await storage.getFurnitureItem(item.furnitureId || "");
+          return { ...item, furniture };
+        })
+      );
+      res.json(cartWithDetails);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch cart" });
+    }
+  });
+
+  app.post("/api/cart", async (req, res) => {
+    try {
+      const validatedData = insertCartItemSchema.parse(req.body);
+      const cartItem = await storage.addToCart(validatedData);
+      res.status(201).json(cartItem);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to add to cart" });
+    }
+  });
+
+  app.put("/api/cart/:id", async (req, res) => {
+    try {
+      const { quantity } = req.body;
+      const cartItem = await storage.updateCartItem(req.params.id, quantity);
+      if (!cartItem) {
+        return res.status(404).json({ message: "Cart item not found" });
+      }
+      res.json(cartItem);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to update cart item" });
+    }
+  });
+
+  app.delete("/api/cart/:id", async (req, res) => {
+    try {
+      const success = await storage.removeFromCart(req.params.id);
+      if (success) {
+        res.json({ message: "Item removed from cart" });
+      } else {
+        res.status(404).json({ message: "Cart item not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Failed to remove from cart" });
+    }
+  });
+
+  app.delete("/api/cart/user/:userId", async (req, res) => {
+    try {
+      const success = await storage.clearCart(req.params.userId);
+      res.json({ message: "Cart cleared successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to clear cart" });
+    }
+  });
+
+  // Orders
+  app.get("/api/orders/:userId", async (req, res) => {
+    try {
+      const orders = await storage.getOrdersByUser(req.params.userId);
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch orders" });
+    }
+  });
+
+  app.post("/api/orders", async (req, res) => {
+    try {
+      const validatedData = insertOrderSchema.parse(req.body);
+      const order = await storage.createOrder(validatedData);
+      
+      // Clear the cart after successful order
+      if (validatedData.userId) {
+        await storage.clearCart(validatedData.userId);
+      }
+      
+      res.status(201).json(order);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to create order" });
+    }
+  });
+
+  app.get("/api/orders/details/:id", async (req, res) => {
+    try {
+      const order = await storage.getOrder(req.params.id);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      res.json(order);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch order" });
     }
   });
 
