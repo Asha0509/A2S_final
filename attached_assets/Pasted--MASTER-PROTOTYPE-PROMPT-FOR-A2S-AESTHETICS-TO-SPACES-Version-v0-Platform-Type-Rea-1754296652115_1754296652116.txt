@@ -1,0 +1,317 @@
+
+
+## 🔷 MASTER PROTOTYPE PROMPT FOR “A2S - AESTHETICS TO SPACES”
+
+> Version: v0 | Platform Type: Real Estate + Room Design + AI Assistant
+> Purpose: Generate a **clickable, premium-quality frontend prototype** that looks fully functional using **dummy data**, including smart search filters, AI-based flow, and interior customization.
+
+---
+
+## 🧠 OVERVIEW
+
+Build a modern, premium, and visually rich prototype for **A2S - Aesthetics to Spaces**, a real estate and design platform offering:
+
+1. **Property Search & Transactions** (Buy / Rent / Land)
+2. **2.5D Room Customization Studio**
+3. **AI Assistant Chat** for intelligent discovery and suggestions
+4. **Consultant Booking**
+5. **User Dashboard**
+
+Each module must include intuitive UX, realistic dummy data, component interactivity (drag/drop, chat, sliders), and clear CTA buttons. The design should feel like a modern, enterprise-level product, with responsiveness and subtle animations.
+
+---
+
+## 🧭 CORE NAVIGATION
+
+Include a persistent top navbar with:
+
+* Dashboard
+* Search Properties
+* Design My Space
+* AI Assistant
+* Book Consultation
+* My Profile / Logout
+
+And a collapsible sidebar for quick navigation within active modules.
+
+---
+
+## 🔍 FLOW 1: **SEARCH PROPERTY (Buy / Rent / Land)**
+
+### URL: `/property/search`
+
+### Step 1: Select Purpose
+
+A segmented selector:
+
+```
+⭕ Buy      ⭕ Rent     ⭕ Land
+```
+
+---
+
+### ✅ PURPOSE-BASED DYNAMIC FILTERING:
+
+#### A. If `Buy` is selected:
+
+* Location (search + "Near Me")
+* **Budget Range**: ₹1L – ₹10Cr slider
+* Property Type: 1BHK / 2BHK / 3BHK / Villa / Studio
+* Facing: N / NE / E / SE / S / SW / W / NW
+* Amenities: Gym / Balcony / Security / Clubhouse / etc.
+
+#### B. If `Rent` is selected:
+
+* Location
+* **Monthly Rent**: ₹1,000 – ₹1L slider
+* Property Type: 1BHK / 2BHK / 3BHK / Shared Room / Studio
+* Furnishing Type: Fully / Semi / Unfurnished
+* Preferred Tenants: Family / Bachelor / Company
+* Facing, Amenities (same)
+
+#### C. If `Land` is selected:
+
+Show an **extra step** after Location:
+
+```
+What is your purpose?
+⭕ Commercial     ⭕ Residential
+```
+
+Then show:
+
+* Budget: ₹50,000 – ₹10Cr+
+* **Plot Size (sq ft)** slider
+* Facing
+* Development Interest: ☐ Near Highway ☐ Market ☐ Tourist Spot ☐ School
+
+---
+
+### 🏡 SEARCH RESULT VIEW
+
+#### A. Buy Property Card
+
+* 📷 Image carousel
+* 💰 Total price (e.g., ₹85L)
+* 📍 Location
+* ↗️ Facing
+* 🏢 Property Type (3BHK Apartment)
+* 👤 Owner or Builder name
+* 🏷️ Tags: `Verified`, `New`, `Premium`
+* 🔘 Buttons:
+
+  * View Details
+  * Contact Owner
+  * Schedule Visit
+  * Bookmark
+  * Reserve / Proceed to Quote
+
+#### B. Rent Property Card
+
+* 📷 Interior photos
+* 💸 Price per month (₹14,000/month)
+* 📍 Location
+* 🏠 Room Type (2BHK Semi-Furnished)
+* ↗️ Facing
+* 🧹 Furnishing tag
+* 👤 Owner name
+* 🏷️ Tags: `Owner Posted`, `Verified`, `Pet Friendly`
+* 🔘 Buttons:
+
+  * Contact Owner
+  * Book Visit
+  * Bookmark
+
+#### C. Land Property Card
+
+* 📷 Static land photo
+* 💰 Price (₹32L)
+* 📍 Location
+* 📏 Plot size (e.g., 4,000 sqft)
+* ↗️ Facing
+* 🧭 Purpose: Residential / Commercial
+* 🧭 Suggested Use (Auto-suggested):
+  e.g., “Ideal for Café, Event Lawn, or Resort”
+* 🔘 Buttons:
+
+  * View Details
+  * Contact Owner
+  * Schedule Visit
+  * Bookmark
+  * Reserve
+
+---
+
+### 📄 LAND DETAIL PAGE
+
+Instead of floorplans, include:
+
+* Full land image
+* Map snapshot or GPS coordinates
+* Plot size, purpose
+* Public reviews
+* Nearby suggestions (e.g., Tech Park – 2km, College – 1.2km)
+* **Suggested business ideas based on zoning & location**
+* Price trend line
+* Buttons: Contact Owner, Schedule Visit, Reserve
+
+---
+
+## 🛋️ FLOW 2: **DESIGN YOUR ROOM**
+
+### URL: `/design-room`
+
+### Step 1: Choose Design Type
+
+* Empty Room (Start from scratch)
+* Semi-Furnished (Customize existing)
+* Renovate (Redesign uploaded room)
+
+### Step 2: Upload Room Media
+
+> Accept either:
+
+* 📹 **Room video** (preferred)
+* 🖼️ **Room image** (optional)
+
+Both trigger a simulated **2.5D design space**.
+
+---
+
+### Step 3: Room Studio Interface
+
+#### Center Panel:
+
+* 2.5D render of room
+* Rotatable, zoomable
+
+#### Left Panel (Furniture):
+
+* Drag & drop:
+
+  * Sofas, beds, chairs, wardrobes
+  * Appliances (TV, fridge, oven)
+  * Electronics (AC, lights, fans)
+
+#### Right Panel (Walls & Utilities):
+
+* Wall paint swatches
+* Wallpaper textures
+* Switches, sockets
+
+#### Bottom Panel (Flooring & Ceiling):
+
+* Floor tiles: Marble, wood, granite
+* Ceiling styles: False ceiling, recessed lights
+
+#### Smart Placement Logic:
+
+* Auto-detect collisions
+* Alert: “Sofa cannot block door path”
+* Items snap to grid or align walls
+
+---
+
+### Buttons / Actions:
+
+* Save Design
+* Reset Layout
+* Smart Auto-Design (based on budget)
+* Book Designer
+* Export Preview
+
+---
+
+## 🤖 FLOW 3: **AI ASSISTANT CHAT**
+
+### URL: `/ai-assistant`
+
+### Features:
+
+* Text input box with prompt suggestions
+
+> “Find me a commercial plot near Vizag for a sweet shop under ₹40L”
+
+### AI Response:
+
+* Suggested properties or design tips based on intent
+* Auto-linked to:
+
+  * Design Room (if design-related)
+  * Property Search (if land/property)
+
+### Add:
+
+* Chat history sidebar
+* Action buttons for results:
+
+  * View Property
+  * Start Designing
+  * Consult Expert
+
+---
+
+## 📆 FLOW 4: **BOOK CONSULTATION**
+
+* Vastu Consultant / Interior Designer options
+* Profile cards with:
+
+  * Name, Experience, Availability
+* Booking form with:
+
+  * Name, Email, Room Type, Date
+* Confirmation screen
+
+---
+
+## 📊 FLOW 5: **DASHBOARD**
+
+### Modules:
+
+* My Properties (bought/rented/bookmarked)
+* My Designs (saved room layouts)
+* My AI Chats (history)
+* My Bookings (consults)
+* Account Settings
+
+---
+
+## 🎨 UI/UX SPECIFICATIONS
+
+* **Design Style**: Flat modern, rounded edges, gradient overlays
+* **Typography**: Clean sans-serif (Inter, Poppins, or similar)
+* **Colors**: Soft neutrals + accent tones per section (e.g., teal for search, lilac for design)
+* **Animations**: Transitions between modules, hover effects on cards, smooth modals
+
+---
+
+## 📦 Dummy Data Examples
+
+### Properties:
+
+* Buy: 2BHK in HSR Layout, ₹85L, East Facing, 1250 sqft
+* Rent: 1BHK in Jubilee Hills, ₹18K/month, Fully Furnished
+* Land: 6000 sqft plot near Vizag Beach, ₹45L, Commercial Use
+
+### Design Items:
+
+* 5 sofa types, 3 bed sizes, 12 paint colors, 4 tile styles
+
+### AI Chat Prompts:
+
+* “Suggest a villa in Goa under ₹1.2Cr”
+* “Help me design a modern living room with teal & wood textures”
+
+---
+
+## 🎯 DELIVERABLE EXPECTATIONS
+
+* Responsive web UI (desktop & mobile)
+* Clickable navigation between all flows
+* Simulated API interactions (dummy AI chat, design save)
+* Separate UI templates for Buy, Rent, Land
+* Smart filters and auto-layout logic in design studio
+* Modals and cards populated with dummy but realistic data
+* Full visual walkthrough from Search → View → Book → Dashboard
+
+-
