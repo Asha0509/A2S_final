@@ -104,9 +104,11 @@ export class MemStorage implements IStorage {
         amenities: ["Gym", "Swimming Pool", "Security", "Parking"],
         tags: ["Verified", "New"],
         images: [
-          "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
-          "https://images.unsplash.com/photo-1591474200742-8e512e6f98f8?w=400",
-          "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400"
+          "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80",
+          "https://images.unsplash.com/photo-1591474200742-8e512e6f98f8?w=800&q=80",
+          "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
+          "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=800&q=80",
+          "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&q=80"
         ],
         ownerName: "Prestige Builders",
         ownerContact: "+91 98765 43210",
@@ -127,9 +129,11 @@ export class MemStorage implements IStorage {
         amenities: ["Security", "Parking", "Balcony"],
         tags: ["Owner Posted", "Pet Friendly"],
         images: [
-          "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400",
-          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-          "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400"
+          "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
+          "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
+          "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&q=80",
+          "https://images.unsplash.com/photo-1582063289852-62e3ba2747f8?w=800&q=80",
+          "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=800&q=80"
         ],
         ownerName: "Rajesh Kumar",
         ownerContact: "+91 98765 43211",
@@ -147,9 +151,11 @@ export class MemStorage implements IStorage {
         amenities: ["Highway Access", "Clear Title"],
         tags: ["Commercial", "Prime Location"],
         images: [
-          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400",
-          "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400",
-          "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=400"
+          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
+          "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80",
+          "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&q=80",
+          "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&q=80",
+          "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800&q=80"
         ],
         ownerName: "Coastal Properties",
         ownerContact: "+91 98765 43212",
@@ -167,9 +173,11 @@ export class MemStorage implements IStorage {
         amenities: ["Swimming Pool", "Garden", "Security", "Clubhouse"],
         tags: ["Premium", "Pool"],
         images: [
-          "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=400",
-          "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
-          "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=400"
+          "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=800&q=80",
+          "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80",
+          "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=800&q=80",
+          "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80"
         ],
         ownerName: "Coastal Properties",
         ownerContact: "+91 98765 43213",
@@ -190,9 +198,11 @@ export class MemStorage implements IStorage {
         amenities: ["Gym", "Security", "WiFi"],
         tags: ["Fully Furnished", "Bachelor Friendly"],
         images: [
-          "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
-          "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=400",
-          "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=400"
+          "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80",
+          "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=800&q=80",
+          "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80",
+          "https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?w=800&q=80",
+          "https://images.unsplash.com/photo-1631889993959-41b4e9c6e3c5?w=800&q=80"
         ],
         ownerName: "Priya Sharma",
         ownerContact: "+91 98765 43214",
@@ -210,12 +220,61 @@ export class MemStorage implements IStorage {
         amenities: ["Clear Title", "Road Access"],
         tags: ["Residential", "Clear Title"],
         images: [
-          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400",
-          "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400",
-          "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400"
+          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
+          "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&q=80",
+          "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&q=80",
+          "https://images.unsplash.com/photo-1597047084897-51e81819e8c3?w=800&q=80",
+          "https://images.unsplash.com/photo-1552588041-6dd7c8e3e0f7?w=800&q=80"
         ],
         ownerName: "Metro Properties",
         ownerContact: "+91 98765 43215",
+        isVerified: true,
+      },
+      {
+        title: "Penthouse Suite",
+        description: "Luxury penthouse with panoramic city views and private terrace",
+        purpose: "buy",
+        propertyType: "Penthouse",
+        price: 25000000,
+        location: "Bandra West, Mumbai",
+        facing: "North",
+        sqft: 3500,
+        amenities: ["Terrace Garden", "Gym", "Swimming Pool", "Valet Parking", "Concierge"],
+        tags: ["Luxury", "City View", "Premium"],
+        images: [
+          "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&q=80",
+          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
+          "https://images.unsplash.com/photo-1600607688960-e095ff8ab456?w=800&q=80",
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+          "https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?w=800&q=80"
+        ],
+        ownerName: "Elite Properties",
+        ownerContact: "+91 98765 43216",
+        isPremium: true,
+        isVerified: true,
+      },
+      {
+        title: "4BHK Family Home",
+        description: "Spacious family home with garden and parking for 2 cars",
+        purpose: "rent",
+        propertyType: "4BHK",
+        price: 35000,
+        location: "Hitech City, Hyderabad",
+        facing: "East",
+        sqft: 1800,
+        furnishing: "Semi-Furnished",
+        tenantPreference: "Family",
+        amenities: ["Garden", "Parking", "Security", "Power Backup"],
+        tags: ["Spacious", "Family Friendly", "Garden"],
+        images: [
+          "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80",
+          "https://images.unsplash.com/photo-1594736797933-d0ed2c1ee4c2?w=800&q=80",
+          "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80",
+          "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&q=80",
+          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80"
+        ],
+        ownerName: "Arvind Reddy",
+        ownerContact: "+91 98765 43217",
         isVerified: true,
       }
     ];
@@ -236,7 +295,7 @@ export class MemStorage implements IStorage {
         dimensions: "240cm x 160cm x 85cm",
         material: "Premium Fabric",
         color: "Charcoal Grey",
-        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400",
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
         installationTime: "2-3 hours",
         roomTypes: ["living_room"]
       },
