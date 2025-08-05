@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Home, Key, Map, Heart, Eye, Phone, Calendar } from "lucide-react";
 import PropertyCard from "@/components/property-card";
 import type { PropertyFilters } from "@/types";
+import type { Property } from "@shared/schema";
 
 export default function PropertySearch() {
   const [selectedPurpose, setSelectedPurpose] = useState<'buy' | 'rent' | 'land'>('buy');
@@ -20,7 +21,7 @@ export default function PropertySearch() {
   });
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
-  const { data: properties, isLoading } = useQuery({
+  const { data: properties, isLoading } = useQuery<Property[]>({
     queryKey: ["/api/properties", filters],
   });
 
