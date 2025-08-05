@@ -36,6 +36,7 @@ type PlacedItem = {
 
 export default function RoomStudio2D() {
   const [uploadState, setUploadState] = useState<'idle' | 'uploading' | 'processing' | 'complete'>('idle');
+  const [selectedRoom, setSelectedRoom] = useState<string>('living_room');
   const [selectedFurniture, setSelectedFurniture] = useState<string | null>(null);
   const [placedItems, setPlacedItems] = useState<PlacedItem[]>([]);
   const [selectedWallColor, setSelectedWallColor] = useState('#ffffff');
@@ -48,28 +49,90 @@ export default function RoomStudio2D() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const furnitureCategories = {
-    seating: [
-      { id: 'sofa-1', name: 'L-Shaped Sofa', category: 'seating', icon: Sofa, price: 45000, image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop', dimensions: '240x160cm' },
-      { id: 'armchair-1', name: 'Accent Chair', category: 'seating', icon: Armchair, price: 15000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '70x80cm' },
-      { id: 'recliner-1', name: 'Recliner', category: 'seating', icon: Armchair, price: 25000, image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=100&h=100&fit=crop', dimensions: '85x95cm' },
-    ],
-    beds: [
-      { id: 'king-bed-1', name: 'King Size Bed', category: 'beds', icon: Bed, price: 38000, image: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=100&h=100&fit=crop', dimensions: '180x200cm' },
-      { id: 'queen-bed-1', name: 'Queen Size Bed', category: 'beds', icon: Bed, price: 32000, image: 'https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=100&h=100&fit=crop', dimensions: '160x200cm' },
-    ],
-    storage: [
-      { id: 'wardrobe-1', name: '3-Door Wardrobe', category: 'storage', icon: Home, price: 55000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '180x60cm' },
-      { id: 'tv-unit-1', name: 'TV Entertainment Unit', category: 'storage', icon: Tv, price: 32000, image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop', dimensions: '180x40cm' },
-    ],
-    appliances: [
-      { id: 'tv-55', name: '55" Smart TV', category: 'appliances', icon: Tv, price: 65000, image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=100&h=100&fit=crop', dimensions: '122x70cm' },
-      { id: 'ac-split', name: 'Split AC 1.5 Ton', category: 'appliances', icon: AirVent, price: 35000, image: 'https://images.unsplash.com/photo-1551721434-8b94ddff0e6d?w=100&h=100&fit=crop', dimensions: '80x30cm' },
-    ],
-    lighting: [
-      { id: 'ceiling-light-1', name: 'LED Ceiling Light', category: 'lighting', icon: Lightbulb, price: 8000, image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop', dimensions: '60x60cm' },
-      { id: 'floor-lamp-1', name: 'Modern Floor Lamp', category: 'lighting', icon: Lightbulb, price: 12000, image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=100&h=100&fit=crop', dimensions: '30x150cm' },
-    ]
+  const roomTypes = [
+    { id: 'living_room', name: 'Living Room', icon: Home, description: 'Sofa, TV unit, coffee table' },
+    { id: 'bedroom', name: 'Bedroom', icon: Bed, description: 'Bed, wardrobe, nightstand' },
+    { id: 'kitchen', name: 'Kitchen', icon: Utensils, description: 'Cabinets, appliances, island' },
+    { id: 'dining', name: 'Dining Room', icon: Utensils, description: 'Dining table, chairs, cabinet' },
+    { id: 'office', name: 'Home Office', icon: Home, description: 'Desk, chair, bookshelf' },
+  ];
+
+  const allFurniture = {
+    living_room: {
+      seating: [
+        { id: 'sofa-l-shaped', name: 'L-Shaped Sofa', category: 'seating', icon: Sofa, price: 45000, image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop', dimensions: '240x160cm', roomTypes: ['living_room'] },
+        { id: 'accent-chair', name: 'Accent Chair', category: 'seating', icon: Armchair, price: 15000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '70x80cm', roomTypes: ['living_room', 'bedroom'] },
+        { id: 'recliner-leather', name: 'Leather Recliner', category: 'seating', icon: Armchair, price: 25000, image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=100&h=100&fit=crop', dimensions: '85x95cm', roomTypes: ['living_room'] },
+        { id: 'coffee-table', name: 'Glass Coffee Table', category: 'tables', icon: Home, price: 18000, image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop', dimensions: '120x60cm', roomTypes: ['living_room'] },
+      ],
+      storage: [
+        { id: 'tv-unit-modern', name: 'Modern TV Unit', category: 'storage', icon: Tv, price: 32000, image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop', dimensions: '180x40cm', roomTypes: ['living_room'] },
+        { id: 'bookshelf-tall', name: 'Tall Bookshelf', category: 'storage', icon: Home, price: 28000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '80x200cm', roomTypes: ['living_room', 'office'] },
+      ],
+      appliances: [
+        { id: 'smart-tv-55', name: '55" Smart TV', category: 'appliances', icon: Tv, price: 65000, image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=100&h=100&fit=crop', dimensions: '122x70cm', roomTypes: ['living_room', 'bedroom'] },
+        { id: 'ac-split-1-5', name: '1.5 Ton Split AC', category: 'appliances', icon: AirVent, price: 35000, image: 'https://images.unsplash.com/photo-1551721434-8b94ddff0e6d?w=100&h=100&fit=crop', dimensions: '80x30cm', roomTypes: ['living_room', 'bedroom'] },
+      ]
+    },
+    bedroom: {
+      beds: [
+        { id: 'king-bed-wooden', name: 'King Size Wooden Bed', category: 'beds', icon: Bed, price: 38000, image: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=100&h=100&fit=crop', dimensions: '180x200cm', roomTypes: ['bedroom'] },
+        { id: 'queen-bed-upholstered', name: 'Queen Upholstered Bed', category: 'beds', icon: Bed, price: 32000, image: 'https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=100&h=100&fit=crop', dimensions: '160x200cm', roomTypes: ['bedroom'] },
+        { id: 'single-bed', name: 'Single Platform Bed', category: 'beds', icon: Bed, price: 22000, image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop', dimensions: '90x200cm', roomTypes: ['bedroom'] },
+      ],
+      storage: [
+        { id: 'wardrobe-3-door', name: '3-Door Wardrobe', category: 'storage', icon: Home, price: 55000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '180x60cm', roomTypes: ['bedroom'] },
+        { id: 'nightstand-pair', name: 'Nightstand (Pair)', category: 'storage', icon: Home, price: 12000, image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=100&h=100&fit=crop', dimensions: '45x35cm each', roomTypes: ['bedroom'] },
+        { id: 'dressing-table', name: 'Dressing Table with Mirror', category: 'storage', icon: Home, price: 25000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '120x45cm', roomTypes: ['bedroom'] },
+      ],
+      seating: [
+        { id: 'bedroom-chair', name: 'Bedroom Accent Chair', category: 'seating', icon: Armchair, price: 12000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '60x70cm', roomTypes: ['bedroom'] },
+      ]
+    },
+    kitchen: {
+      appliances: [
+        { id: 'refrigerator-double', name: 'Double Door Refrigerator', category: 'appliances', icon: Home, price: 85000, image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=100&h=100&fit=crop', dimensions: '70x180cm', roomTypes: ['kitchen'] },
+        { id: 'microwave-convection', name: 'Convection Microwave', category: 'appliances', icon: Home, price: 25000, image: 'https://images.unsplash.com/photo-1574269909862-7a67b8b6b7bc?w=100&h=100&fit=crop', dimensions: '45x35cm', roomTypes: ['kitchen'] },
+        { id: 'dishwasher', name: 'Built-in Dishwasher', category: 'appliances', icon: Home, price: 45000, image: 'https://images.unsplash.com/photo-1574269909862-7a67b8b6b7bc?w=100&h=100&fit=crop', dimensions: '60x85cm', roomTypes: ['kitchen'] },
+      ],
+      storage: [
+        { id: 'kitchen-cabinet-upper', name: 'Upper Kitchen Cabinets', category: 'storage', icon: Home, price: 35000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '200x40cm', roomTypes: ['kitchen'] },
+        { id: 'kitchen-cabinet-base', name: 'Base Kitchen Cabinets', category: 'storage', icon: Home, price: 45000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '200x60cm', roomTypes: ['kitchen'] },
+        { id: 'kitchen-island', name: 'Kitchen Island', category: 'storage', icon: Home, price: 65000, image: 'https://images.unsplash.com/photo-1556909114-8c73f8d8f23e?w=100&h=100&fit=crop', dimensions: '150x80cm', roomTypes: ['kitchen'] },
+      ]
+    },
+    dining: {
+      tables: [
+        { id: 'dining-table-6', name: '6-Seater Dining Table', category: 'tables', icon: Home, price: 42000, image: 'https://images.unsplash.com/photo-1549497538-303791108f95?w=100&h=100&fit=crop', dimensions: '180x90cm', roomTypes: ['dining'] },
+        { id: 'dining-table-4', name: '4-Seater Dining Table', category: 'tables', icon: Home, price: 28000, image: 'https://images.unsplash.com/photo-1549497538-303791108f95?w=100&h=100&fit=crop', dimensions: '120x80cm', roomTypes: ['dining'] },
+      ],
+      seating: [
+        { id: 'dining-chairs-6', name: 'Dining Chairs (Set of 6)', category: 'seating', icon: Armchair, price: 24000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '45x50cm each', roomTypes: ['dining'] },
+        { id: 'dining-chairs-4', name: 'Dining Chairs (Set of 4)', category: 'seating', icon: Armchair, price: 16000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '45x50cm each', roomTypes: ['dining'] },
+      ],
+      storage: [
+        { id: 'dining-cabinet', name: 'Dining Room Cabinet', category: 'storage', icon: Home, price: 38000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '160x85cm', roomTypes: ['dining'] },
+      ]
+    },
+    office: {
+      tables: [
+        { id: 'office-desk-l', name: 'L-Shaped Office Desk', category: 'tables', icon: Home, price: 35000, image: 'https://images.unsplash.com/photo-1549497538-303791108f95?w=100&h=100&fit=crop', dimensions: '160x120cm', roomTypes: ['office'] },
+        { id: 'office-desk-simple', name: 'Simple Office Desk', category: 'tables', icon: Home, price: 18000, image: 'https://images.unsplash.com/photo-1549497538-303791108f95?w=100&h=100&fit=crop', dimensions: '120x60cm', roomTypes: ['office'] },
+      ],
+      seating: [
+        { id: 'office-chair-executive', name: 'Executive Office Chair', category: 'seating', icon: Armchair, price: 22000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '70x70cm', roomTypes: ['office'] },
+        { id: 'office-chair-ergonomic', name: 'Ergonomic Desk Chair', category: 'seating', icon: Armchair, price: 15000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '65x65cm', roomTypes: ['office'] },
+      ],
+      storage: [
+        { id: 'bookshelf-office', name: 'Office Bookshelf', category: 'storage', icon: Home, price: 28000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '80x200cm', roomTypes: ['office'] },
+        { id: 'filing-cabinet', name: 'Filing Cabinet', category: 'storage', icon: Home, price: 15000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '40x80cm', roomTypes: ['office'] },
+      ]
+    }
+  };
+
+  // Get furniture for selected room
+  const getCurrentRoomFurniture = () => {
+    return allFurniture[selectedRoom as keyof typeof allFurniture] || {};
   };
 
   const wallColors = [
@@ -172,9 +235,11 @@ export default function RoomStudio2D() {
   };
 
   const getFurnitureById = (id: string) => {
-    for (const category of Object.values(furnitureCategories)) {
-      const found = category.find(item => item.id === id);
-      if (found) return found;
+    for (const roomFurniture of Object.values(allFurniture)) {
+      for (const category of Object.values(roomFurniture)) {
+        const found = category.find(item => item.id === id);
+        if (found) return found;
+      }
     }
     return null;
   };
@@ -183,8 +248,35 @@ export default function RoomStudio2D() {
     <div className="h-screen flex flex-col bg-slate-50">
       {/* Top Toolbar */}
       <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           <h2 className="text-xl font-bold text-slate-800">Room Studio 2.5D</h2>
+          
+          {/* Room Type Selector */}
+          <div className="flex items-center space-x-3">
+            <Label className="text-sm font-medium text-slate-700">Room Type:</Label>
+            <div className="flex space-x-1 bg-slate-100 rounded-lg p-1">
+              {roomTypes.map(room => (
+                <Button
+                  key={room.id}
+                  variant={selectedRoom === room.id ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => {
+                    setSelectedRoom(room.id);
+                    setPlacedItems([]); // Clear placed items when changing room
+                    toast({
+                      title: `Switched to ${room.name}`,
+                      description: room.description
+                    });
+                  }}
+                  className={selectedRoom === room.id ? "bg-teal-600 hover:bg-teal-700 text-white" : ""}
+                >
+                  <room.icon className="w-4 h-4 mr-2" />
+                  {room.name}
+                </Button>
+              ))}
+            </div>
+          </div>
+          
           <div className="flex items-center space-x-2">
             <Button 
               variant="outline" 
@@ -253,112 +345,89 @@ export default function RoomStudio2D() {
         {/* Left Panel - Furniture */}
         <div className="w-80 bg-white border-r border-slate-200 overflow-y-auto">
           <div className="p-4">
-            <h3 className="font-semibold text-slate-800 mb-4">Furniture & Items</h3>
-            
-            <Tabs defaultValue="seating">
-              <TabsList className="grid w-full grid-cols-3 mb-4">
-                <TabsTrigger value="seating">Seating</TabsTrigger>
-                <TabsTrigger value="beds">Beds</TabsTrigger>
-                <TabsTrigger value="storage">Storage</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="seating">
-                <div className="space-y-3">
-                  {furnitureCategories.seating.map(item => (
-                    <Card 
-                      key={item.id} 
-                      className={`cursor-pointer transition-all hover:shadow-md ${selectedFurniture === item.id ? 'ring-2 ring-teal-500' : ''}`}
-                      onClick={() => handleDragStart(item)}
-                    >
-                      <CardContent className="p-3">
-                        <div className="flex items-center space-x-3">
-                          <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
-                          <div className="flex-1">
-                            <h4 className="font-medium text-sm">{item.name}</h4>
-                            <p className="text-xs text-slate-500">{item.dimensions}</p>
-                            <p className="text-sm font-semibold text-teal-600">₹{(item.price / 1000).toFixed(0)}K</p>
-                          </div>
-                          <item.icon className="w-5 h-5 text-slate-400" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="beds">
-                <div className="space-y-3">
-                  {furnitureCategories.beds.map(item => (
-                    <Card 
-                      key={item.id} 
-                      className={`cursor-pointer transition-all hover:shadow-md ${selectedFurniture === item.id ? 'ring-2 ring-teal-500' : ''}`}
-                      onClick={() => handleDragStart(item)}
-                    >
-                      <CardContent className="p-3">
-                        <div className="flex items-center space-x-3">
-                          <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
-                          <div className="flex-1">
-                            <h4 className="font-medium text-sm">{item.name}</h4>
-                            <p className="text-xs text-slate-500">{item.dimensions}</p>
-                            <p className="text-sm font-semibold text-teal-600">₹{(item.price / 1000).toFixed(0)}K</p>
-                          </div>
-                          <item.icon className="w-5 h-5 text-slate-400" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="storage">
-                <div className="space-y-3">
-                  {furnitureCategories.storage.map(item => (
-                    <Card 
-                      key={item.id} 
-                      className={`cursor-pointer transition-all hover:shadow-md ${selectedFurniture === item.id ? 'ring-2 ring-teal-500' : ''}`}
-                      onClick={() => handleDragStart(item)}
-                    >
-                      <CardContent className="p-3">
-                        <div className="flex items-center space-x-3">
-                          <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
-                          <div className="flex-1">
-                            <h4 className="font-medium text-sm">{item.name}</h4>
-                            <p className="text-xs text-slate-500">{item.dimensions}</p>
-                            <p className="text-sm font-semibold text-teal-600">₹{(item.price / 1000).toFixed(0)}K</p>
-                          </div>
-                          <item.icon className="w-5 h-5 text-slate-400" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-
-            <div className="mt-6">
-              <h4 className="font-semibold text-slate-800 mb-3">Electronics</h4>
-              <div className="space-y-3">
-                {furnitureCategories.appliances.concat(furnitureCategories.lighting).map(item => (
-                  <Card 
-                    key={item.id} 
-                    className={`cursor-pointer transition-all hover:shadow-md ${selectedFurniture === item.id ? 'ring-2 ring-teal-500' : ''}`}
-                    onClick={() => handleDragStart(item)}
-                  >
-                    <CardContent className="p-3">
-                      <div className="flex items-center space-x-3">
-                        <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm">{item.name}</h4>
-                          <p className="text-xs text-slate-500">{item.dimensions}</p>
-                          <p className="text-sm font-semibold text-teal-600">₹{(item.price / 1000).toFixed(0)}K</p>
-                        </div>
-                        <item.icon className="w-5 h-5 text-slate-400" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-slate-800">
+                {roomTypes.find(r => r.id === selectedRoom)?.name} Furniture
+              </h3>
+              <Badge variant="outline" className="text-xs">
+                {Object.values(getCurrentRoomFurniture()).reduce((total, category) => total + category.length, 0)} items
+              </Badge>
             </div>
+            
+            {Object.keys(getCurrentRoomFurniture()).length > 0 ? (
+              <Tabs defaultValue={Object.keys(getCurrentRoomFurniture())[0]}>
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  {Object.keys(getCurrentRoomFurniture()).slice(0, 2).map(category => (
+                    <TabsTrigger key={category} value={category} className="capitalize">
+                      {category}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                
+                {Object.entries(getCurrentRoomFurniture()).map(([category, items]) => (
+                  <TabsContent key={category} value={category}>
+                    <div className="space-y-3">
+                      {items.map((item: FurnitureItem) => (
+                        <Card 
+                          key={item.id} 
+                          className={`cursor-pointer transition-all hover:shadow-md ${selectedFurniture === item.id ? 'ring-2 ring-teal-500' : ''}`}
+                          onClick={() => handleDragStart(item)}
+                        >
+                          <CardContent className="p-3">
+                            <div className="flex items-center space-x-3">
+                              <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
+                              <div className="flex-1">
+                                <h4 className="font-medium text-sm">{item.name}</h4>
+                                <p className="text-xs text-slate-500">{item.dimensions}</p>
+                                <p className="text-sm font-semibold text-teal-600">₹{(item.price / 1000).toFixed(0)}K</p>
+                              </div>
+                              <item.icon className="w-5 h-5 text-slate-400" />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </TabsContent>
+                ))}
+                
+                {/* Additional categories if more than 2 */}
+                {Object.keys(getCurrentRoomFurniture()).length > 2 && (
+                  <div className="mt-6">
+                    {Object.entries(getCurrentRoomFurniture()).slice(2).map(([category, items]) => (
+                      <div key={category} className="mb-4">
+                        <h4 className="font-semibold text-slate-800 mb-3 capitalize">{category}</h4>
+                        <div className="space-y-3">
+                          {items.map((item: FurnitureItem) => (
+                            <Card 
+                              key={item.id} 
+                              className={`cursor-pointer transition-all hover:shadow-md ${selectedFurniture === item.id ? 'ring-2 ring-teal-500' : ''}`}
+                              onClick={() => handleDragStart(item)}
+                            >
+                              <CardContent className="p-3">
+                                <div className="flex items-center space-x-3">
+                                  <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
+                                  <div className="flex-1">
+                                    <h4 className="font-medium text-sm">{item.name}</h4>
+                                    <p className="text-xs text-slate-500">{item.dimensions}</p>
+                                    <p className="text-sm font-semibold text-teal-600">₹{(item.price / 1000).toFixed(0)}K</p>
+                                  </div>
+                                  <item.icon className="w-5 h-5 text-slate-400" />
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Tabs>
+            ) : (
+              <div className="text-center py-8 text-slate-500">
+                <Home className="w-12 h-12 mx-auto mb-2 text-slate-300" />
+                <p className="text-sm">No furniture available for this room type</p>
+              </div>
+            )}
           </div>
         </div>
 
