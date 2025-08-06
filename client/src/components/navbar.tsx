@@ -39,8 +39,12 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="https://ik.imagekit.io/m1onltwqh/Untitled%20design%20(1).png?updatedAt=1754502471393">
               <div className="flex items-center space-x-4 cursor-pointer">
-                <div className="bg-gradient-to-r from-teal-600 to-purple-600 text-white p-2 rounded-lg">
-                  <Home className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-lg overflow-hidden">
+                  <img 
+                    src="/attached_assets/Untitled design (1)_1754501430763.png" 
+                    alt="A2S Logo" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-slate-800">A2S</h1>

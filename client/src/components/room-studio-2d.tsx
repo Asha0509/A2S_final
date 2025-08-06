@@ -11,7 +11,8 @@ import {
   Upload, Video, RotateCcw, ZoomIn, ZoomOut, Save, RotateCw, 
   Sparkles, Eye, UserCheck, Download, Home, Sofa, Armchair, 
   Tv, Bed, Utensils, AirVent, Lightbulb, Palette, Layers,
-  Grid, Move, AlertTriangle, CheckCircle
+  Grid, Move, AlertTriangle, CheckCircle, ShoppingCart, Phone,
+  Package, Calendar, ArrowLeft
 } from "lucide-react";
 import emptyRoomImage from "@assets/Leerer-weisser-Raum_620x417px_1754411499692.jpg";
 
@@ -45,6 +46,9 @@ export default function RoomStudio2D() {
   const [roomZoom, setRoomZoom] = useState(1);
   const [showGrid, setShowGrid] = useState(true);
   const [collisionAlert, setCollisionAlert] = useState<string | null>(null);
+  const [showCart, setShowCart] = useState(false);
+  const [budgetLimit, setBudgetLimit] = useState(500000); // Default 5L in rupees
+  const [showBudgetAlert, setShowBudgetAlert] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -244,100 +248,285 @@ export default function RoomStudio2D() {
     return null;
   };
 
+  const getCartItems = () => {
+    return placedItems.map(item => {
+      const furniture = getFurnitureById(item.furnitureId);
+      return {
+        ...item,
+        furniture: furniture
+      };
+    }).filter(item => item.furniture);
+  };
+
+  const calculateCartTotal = () => {
+    return getCartItems().reduce((total, item) => total + (item.furniture?.price || 0), 0);
+  };
+
+  // Check if cart total exceeds budget limit
+  const checkBudgetLimit = () => {
+    const cartTotal = calculateCartTotal();
+    return cartTotal > budgetLimit;
+  };
+
+  // Format budget amount for display
+  const formatBudgetAmount = (amount: number) => {
+    if (amount >= 100000) {
+      return `₹${(amount / 100000).toFixed(1)}L`;
+    } else if (amount >= 1000) {
+      return `₹${(amount / 1000).toFixed(0)}K`;
+    } else {
+      return `₹${amount}`;
+    }
+  };
+
+  const hasFurnitureOnly = () => {
+    const cartItems = getCartItems();
+    return cartItems.every(item => 
+      item.furniture?.category === 'seating' || 
+      item.furniture?.category === 'storage' || 
+      item.furniture?.category === 'beds' ||
+      item.furniture?.category === 'tables'
+    );
+  };
+
+  const hasNonFurnitureItems = () => {
+    const cartItems = getCartItems();
+    return cartItems.some(item => 
+      item.furniture?.category === 'appliances' ||
+      item.furniture?.category === 'paint' ||
+      item.furniture?.category === 'utilities'
+    );
+  };
+
+  const handleCheckout = () => {
+    if (placedItems.length === 0) {
+      toast({
+        title: "No items in cart",
+        description: "Please add some furniture to your room before checkout.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Generate mock order ID
+    const orderId = `ORD-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`;
+    
+    toast({
+      title: "Processing Payment...",
+      description: "Redirecting to payment gateway.",
+    });
+
+    // Mock payment process - redirect to success page after 2 seconds
+    setTimeout(() => {
+      // Store order details in localStorage for the success page
+      const orderDetails = {
+        orderId,
+        items: getCartItems(),
+        total: calculateCartTotal(),
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('lastOrder', JSON.stringify(orderDetails));
+      
+      toast({
+        title: "Payment Successful!",
+        description: `Order ${orderId} has been confirmed.`,
+      });
+      
+      // Redirect to order success page
+      window.location.href = '/order-success';
+    }, 2000);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-slate-50">
       {/* Top Toolbar */}
-      <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          <h2 className="text-xl font-bold text-slate-800">Room Studio 2.5D</h2>
-          
-          {/* Room Type Selector */}
-          <div className="flex items-center space-x-3">
-            <Label className="text-sm font-medium text-slate-700">Room Type:</Label>
-            <div className="flex space-x-1 bg-slate-100 rounded-lg p-1">
-              {roomTypes.map(room => (
-                <Button
-                  key={room.id}
-                  variant={selectedRoom === room.id ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => {
-                    setSelectedRoom(room.id);
-                    setPlacedItems([]); // Clear placed items when changing room
-                    toast({
-                      title: `Switched to ${room.name}`,
-                      description: room.description
-                    });
-                  }}
-                  className={selectedRoom === room.id ? "bg-teal-600 hover:bg-teal-700 text-white" : ""}
-                >
-                  <room.icon className="w-4 h-4 mr-2" />
-                  {room.name}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
+      <div className="bg-white border-b border-slate-200 p-4">
+        {/* First Row - Dashboard Button and Room Studio 2.5D Title */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
               size="sm"
-              onClick={() => setRoomRotation(prev => prev - 15)}
+              onClick={() => window.location.href = '/dashboard'}
+              data-testid="button-back-dashboard"
             >
-              <RotateCcw className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Dashboard
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setRoomRotation(prev => prev + 15)}
-            >
-              <RotateCw className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setRoomZoom(prev => Math.min(prev + 0.1, 2))}
-            >
-              <ZoomIn className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setRoomZoom(prev => Math.max(prev - 0.1, 0.5))}
-            >
-              <ZoomOut className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowGrid(!showGrid)}
-              className={showGrid ? "bg-teal-50 border-teal-200" : ""}
-            >
-              <Grid className="w-4 h-4" />
-            </Button>
+            <h2 className="text-xl font-bold text-slate-800">Room Studio 2.5D</h2>
           </div>
         </div>
-        
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
-            <Save className="w-4 h-4 mr-1" />
-            Save Design
+
+        {/* Second Row - Room Type Selector */}
+        <div className="flex items-center gap-3 mb-4">
+          <Label className="text-sm font-medium text-slate-700 whitespace-nowrap">Room Type:</Label>
+          <div className="flex gap-2">
+            {roomTypes.map(room => (
+              <Button
+                key={room.id}
+                variant={selectedRoom === room.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setSelectedRoom(room.id);
+                  setPlacedItems([]); // Clear placed items when changing room
+                  toast({
+                    title: `Switched to ${room.name}`,
+                    description: room.description
+                  });
+                }}
+                className={`${selectedRoom === room.id ? "bg-teal-600 hover:bg-teal-700 text-white" : ""}`}
+                data-testid={`button-room-${room.id}`}
+              >
+                <room.icon className="w-4 h-4 mr-2" />
+                {room.name}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Third Row - 5 Small Icons */}
+        <div className="flex items-center gap-2 mb-4">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setRoomRotation(prev => prev - 15)}
+            data-testid="button-rotate-left"
+          >
+            <RotateCcw className="w-4 h-4" />
           </Button>
-          <Button variant="outline" size="sm">
-            <RotateCcw className="w-4 h-4 mr-1" />
-            Reset Layout
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setRoomRotation(prev => prev + 15)}
+            data-testid="button-rotate-right"
+          >
+            <RotateCw className="w-4 h-4" />
           </Button>
-          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white" size="sm">
-            <Sparkles className="w-4 h-4 mr-1" />
-            Smart Auto-Design
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setRoomZoom(prev => Math.min(prev + 0.1, 2))}
+            data-testid="button-zoom-in"
+          >
+            <ZoomIn className="w-4 h-4" />
           </Button>
-          <Button variant="outline" size="sm">
-            <UserCheck className="w-4 h-4 mr-1" />
-            Book Designer
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setRoomZoom(prev => Math.max(prev - 0.1, 0.5))}
+            data-testid="button-zoom-out"
+          >
+            <ZoomOut className="w-4 h-4" />
           </Button>
-          <Button variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-1" />
-            Export Preview
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowGrid(!showGrid)}
+            className={showGrid ? "bg-teal-50 border-teal-200" : ""}
+            data-testid="button-toggle-grid"
+          >
+            <Grid className="w-4 h-4" />
           </Button>
+        </div>
+
+        {/* Fourth Row - Buttons with Checkout */}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="sm" data-testid="button-save-design">
+              <Save className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Save Design</span>
+              <span className="sm:hidden">Save</span>
+            </Button>
+            <Button variant="outline" size="sm" data-testid="button-reset-layout">
+              <RotateCcw className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Reset Layout</span>
+              <span className="sm:hidden">Reset</span>
+            </Button>
+            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white" size="sm" data-testid="button-auto-design">
+              <Sparkles className="w-4 h-4 mr-1" />
+              <span className="hidden lg:inline">Smart Auto-Design</span>
+              <span className="lg:hidden">Auto-Design</span>
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => window.location.href = '/book-consultation'} data-testid="button-book-designer">
+              <UserCheck className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Book Designer</span>
+              <span className="sm:hidden">Book</span>
+            </Button>
+            <Button variant="outline" size="sm" data-testid="button-export-preview">
+              <Download className="w-4 h-4 mr-1" />
+              <span className="hidden lg:inline">Export Preview</span>
+              <span className="lg:hidden">Export</span>
+            </Button>
+          </div>
+          
+          {/* Budget Scale */}
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-2">
+              <Label className="text-xs font-medium text-slate-600">Budget Limit</Label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="range"
+                  min="2000"
+                  max="1500000"
+                  step="25000"
+                  value={budgetLimit}
+                  onChange={(e) => setBudgetLimit(Number(e.target.value))}
+                  className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                  data-testid="budget-slider"
+                />
+                <span className="text-sm font-medium text-slate-700 min-w-[50px]">
+                  {formatBudgetAmount(budgetLimit)}
+                </span>
+              </div>
+            </div>
+
+            {/* Checkout Buttons */}
+            {placedItems.length > 0 && (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <ShoppingCart className="w-4 h-4 text-emerald-600" />
+                  <span className="font-medium">{placedItems.length} items</span>
+                  <span className={`font-bold ${checkBudgetLimit() ? 'text-red-600' : 'text-emerald-600'}`}>
+                    ₹{(calculateCartTotal() / 1000).toFixed(0)}K
+                  </span>
+                  {checkBudgetLimit() && (
+                    <span className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded">
+                      Over Budget!
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowCart(!showCart)}
+                    data-testid="button-view-details"
+                  >
+                    {showCart ? 'Hide Details' : 'View Details'}
+                  </Button>
+                  <Button 
+                    className={`${checkBudgetLimit() ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
+                    size="sm"
+                    onClick={() => {
+                      if (checkBudgetLimit()) {
+                        toast({
+                          title: "Budget Exceeded!",
+                          description: `Your cart total (${formatBudgetAmount(calculateCartTotal())}) exceeds your budget limit (${formatBudgetAmount(budgetLimit)}). Please adjust your selections or increase your budget.`,
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+                      handleCheckout();
+                    }}
+                    data-testid="button-checkout-top"
+                  >
+                    <Package className="w-4 h-4 mr-2" />
+                    {checkBudgetLimit() ? 'Over Budget' : 'Checkout & Install'}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -628,43 +817,95 @@ export default function RoomStudio2D() {
         </div>
       </div>
 
-      {/* Bottom Panel - Flooring & Ceiling */}
-      <div className="bg-white border-t border-slate-200 p-4">
-        <div className="flex space-x-8">
-          <div className="flex-1">
-            <h4 className="font-semibold text-slate-800 mb-3">Flooring Options</h4>
-            <div className="flex space-x-4">
-              {floorTypes.map(floor => (
-                <div
-                  key={floor.id}
-                  className={`cursor-pointer p-3 rounded-lg border-2 transition-all ${
-                    selectedFloorType === floor.id ? 'border-teal-500 bg-teal-50' : 'border-slate-200 hover:border-slate-300'
-                  }`}
-                  onClick={() => setSelectedFloorType(floor.id)}
-                >
-                  <img src={floor.image} alt={floor.name} className="w-16 h-16 object-cover rounded mb-2" />
-                  <p className="text-sm font-medium text-center">{floor.name}</p>
-                </div>
-              ))}
-            </div>
+      {/* Bottom Panel - Cart Details (Simplified) */}
+      {placedItems.length > 0 && showCart && (
+        <div className="bg-white border-t border-slate-200 p-4">
+          <div className="mb-4">
+            <h4 className="font-semibold text-slate-800 flex items-center mb-3">
+              <ShoppingCart className="w-5 h-5 mr-2 text-emerald-600" />
+              Cart Details ({placedItems.length} items)
+            </h4>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowCart(false)}
+              data-testid="button-hide-cart"
+              className="mb-3"
+            >
+              Hide Details
+            </Button>
           </div>
           
-          <div className="flex-1">
-            <h4 className="font-semibold text-slate-800 mb-3">Ceiling Styles</h4>
-            <div className="flex space-x-4">
-              {ceilingStyles.map(ceiling => (
-                <div
-                  key={ceiling.id}
-                  className="cursor-pointer p-3 rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-all"
-                >
-                  <img src={ceiling.image} alt={ceiling.name} className="w-16 h-16 object-cover rounded mb-2" />
-                  <p className="text-sm font-medium text-center">{ceiling.name}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-40 overflow-y-auto">
+            {getCartItems().map((item) => (
+              <div key={item.id} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
+                <img 
+                  src={item.furniture?.image} 
+                  alt={item.furniture?.name} 
+                  className="w-12 h-12 object-cover rounded"
+                />
+                <div className="flex-1">
+                  <h5 className="font-medium text-sm">{item.furniture?.name}</h5>
+                  <p className="text-xs text-slate-500">{item.furniture?.dimensions}</p>
+                  <p className="text-sm font-semibold text-emerald-600">
+                    ₹{((item.furniture?.price || 0) / 1000).toFixed(0)}K
+                  </p>
                 </div>
-              ))}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeItem(item.id)}
+                  data-testid={`button-remove-${item.id}`}
+                >
+                  ×
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Flooring Panel - Only show when no cart items */}
+      {placedItems.length === 0 && (
+        <div className="bg-white border-t border-slate-200 p-4">
+          <div className="flex space-x-8">
+            <div className="flex-1">
+              <h4 className="font-semibold text-slate-800 mb-3">Flooring Options</h4>
+              <div className="flex space-x-4">
+                {floorTypes.map(floor => (
+                  <div
+                    key={floor.id}
+                    className={`cursor-pointer p-3 rounded-lg border-2 transition-all ${
+                      selectedFloorType === floor.id ? 'border-teal-500 bg-teal-50' : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                    onClick={() => setSelectedFloorType(floor.id)}
+                    data-testid={`button-floor-${floor.id}`}
+                  >
+                    <img src={floor.image} alt={floor.name} className="w-16 h-16 object-cover rounded mb-2" />
+                    <p className="text-sm font-medium text-center">{floor.name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="flex-1">
+              <h4 className="font-semibold text-slate-800 mb-3">Ceiling Styles</h4>
+              <div className="flex space-x-4">
+                {ceilingStyles.map(ceiling => (
+                  <div
+                    key={ceiling.id}
+                    className="cursor-pointer p-3 rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-all"
+                    data-testid={`button-ceiling-${ceiling.id}`}
+                  >
+                    <img src={ceiling.image} alt={ceiling.name} className="w-16 h-16 object-cover rounded mb-2" />
+                    <p className="text-sm font-medium text-center">{ceiling.name}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -9,6 +9,9 @@ import PropertySearch from "@/pages/property-search";
 import DesignRoom from "@/pages/design-room";
 import AiAssistant from "@/pages/ai-assistant";
 import BookConsultation from "@/pages/book-consultation";
+import BookingSuccess from "@/pages/booking-success";
+import OrderCheckout from "@/pages/order-checkout";
+import OrderSuccess from "@/pages/order-success";
 import Checkout from "@/pages/checkout";
 import Navbar from "@/components/navbar";
 
@@ -20,9 +23,16 @@ function Router() {
         <Route path="/" component={Dashboard} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/search" component={PropertySearch} />
+        <Route path="/property-search" component={PropertySearch} />
         <Route path="/design" component={DesignRoom} />
+        <Route path="/design-room" component={DesignRoom} />
         <Route path="/ai" component={AiAssistant} />
+        <Route path="/ai-assistant" component={AiAssistant} />
         <Route path="/booking" component={BookConsultation} />
+        <Route path="/book-consultation" component={BookConsultation} />
+        <Route path="/booking-success" component={BookingSuccess} />
+        <Route path="/order-checkout" component={OrderCheckout} />
+        <Route path="/order-success" component={OrderSuccess} />
         <Route path="/checkout" component={Checkout} />
         <Route component={NotFound} />
       </Switch>
