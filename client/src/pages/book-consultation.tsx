@@ -93,7 +93,9 @@ export default function BookConsultation() {
       return;
     }
 
-    const selectedConsultantData = consultants?.find((c: any) => c.id === selectedConsultant);
+    const selectedConsultantData = Array.isArray(consultants) 
+      ? consultants.find((c: any) => c.id === selectedConsultant)
+      : null;
     
     bookingMutation.mutate({
       userId: "user-1", // Mock user ID
@@ -156,7 +158,7 @@ export default function BookConsultation() {
             Available {selectedType === 'vastu' ? 'Vastu Consultants' : selectedType === 'interior' ? 'Interior Designers' : 'Consultants'}
           </h3>
           
-          {consultants?.map((consultant: any) => (
+          {Array.isArray(consultants) && consultants.map((consultant: any) => (
             <ConsultantCard 
               key={consultant.id}
               consultant={consultant}
@@ -301,7 +303,9 @@ export default function BookConsultation() {
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-medium text-slate-800">Consultation Fee</span>
                     <span className="text-xl font-bold text-emerald-600">
-                      ₹{consultants?.find((c: any) => c.id === selectedConsultant)?.price || 0}
+                      ₹{Array.isArray(consultants) 
+                        ? consultants.find((c: any) => c.id === selectedConsultant)?.price || 0
+                        : 0}
                     </span>
                   </div>
                   <p className="text-sm text-slate-600">
