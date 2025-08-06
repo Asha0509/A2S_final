@@ -1,9 +1,46 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Package, Truck, Calendar, ArrowLeft, Phone } from "lucide-react";
 import { Link } from "wouter";
 
+interface OrderDetails {
+  orderId: string;
+  items: Array<{
+    id: string;
+    furniture: {
+      name: string;
+      price: number;
+      image: string;
+      dimensions: string;
+    };
+  }>;
+  total: number;
+  timestamp: string;
+}
+
 export default function OrderSuccess() {
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
+
+  useEffect(() => {
+    // Get order details from localStorage
+    const storedOrder = localStorage.getItem('lastOrder');
+    if (storedOrder) {
+      try {
+        const parsed = JSON.parse(storedOrder);
+        setOrderDetails(parsed);
+        // Clear the order from localStorage after showing it
+        localStorage.removeItem('lastOrder');
+      } catch (error) {
+        console.error('Failed to parse order details:', error);
+      }
+    }
+  }, []);
+
+  // Default values if no order found
+  const displayOrderId = orderDetails?.orderId || '#ORD-2025-001';
+  const displayTotal = orderDetails ? orderDetails.total : 70000;
+  const displayItemCount = orderDetails?.items?.length || 2;
   return (
     <main className="max-w-4xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="text-center mb-8">
@@ -28,15 +65,15 @@ export default function OrderSuccess() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-slate-600">Order ID:</span>
-                  <span className="font-medium">#ORD-2025-001</span>
+                  <span className="font-medium">{displayOrderId}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Items:</span>
-                  <span className="font-medium">2 furniture pieces</span>
+                  <span className="font-medium">{displayItemCount} furniture pieces</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Total Amount:</span>
-                  <span className="font-medium text-emerald-600">₹70K</span>
+                  <span className="font-medium text-emerald-600">₹{(displayTotal / 1000).toFixed(0)}K</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Payment Status:</span>

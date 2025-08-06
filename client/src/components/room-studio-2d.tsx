@@ -12,7 +12,7 @@ import {
   Sparkles, Eye, UserCheck, Download, Home, Sofa, Armchair, 
   Tv, Bed, Utensils, AirVent, Lightbulb, Palette, Layers,
   Grid, Move, AlertTriangle, CheckCircle, ShoppingCart, Phone,
-  Package, Calendar
+  Package, Calendar, ArrowLeft
 } from "lucide-react";
 import emptyRoomImage from "@assets/Leerer-weisser-Raum_620x417px_1754411499692.jpg";
 
@@ -279,12 +279,62 @@ export default function RoomStudio2D() {
     );
   };
 
+  const handleCheckout = () => {
+    if (placedItems.length === 0) {
+      toast({
+        title: "No items in cart",
+        description: "Please add some furniture to your room before checkout.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Generate mock order ID
+    const orderId = `ORD-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`;
+    
+    toast({
+      title: "Processing Payment...",
+      description: "Redirecting to payment gateway.",
+    });
+
+    // Mock payment process - redirect to success page after 2 seconds
+    setTimeout(() => {
+      // Store order details in localStorage for the success page
+      const orderDetails = {
+        orderId,
+        items: getCartItems(),
+        total: calculateCartTotal(),
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('lastOrder', JSON.stringify(orderDetails));
+      
+      toast({
+        title: "Payment Successful!",
+        description: `Order ${orderId} has been confirmed.`,
+      });
+      
+      // Redirect to order success page
+      window.location.href = '/order-success';
+    }, 2000);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-slate-50">
       {/* Top Toolbar */}
       <div className="bg-white border-b border-slate-200 p-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-6">
-          <h2 className="text-lg lg:text-xl font-bold text-slate-800 whitespace-nowrap">Room Studio 2.5D</h2>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.location.href = '/dashboard'}
+              data-testid="button-back-dashboard"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Dashboard
+            </Button>
+            <h2 className="text-lg lg:text-xl font-bold text-slate-800 whitespace-nowrap">Room Studio 2.5D</h2>
+          </div>
           
           {/* Room Type Selector */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
@@ -693,7 +743,7 @@ export default function RoomStudio2D() {
               {hasFurnitureOnly() && !hasNonFurnitureItems() ? (
                 <Button 
                   className="bg-emerald-600 hover:bg-emerald-700"
-                  onClick={() => window.location.href = '/order-checkout'}
+                  onClick={handleCheckout}
                   data-testid="button-checkout"
                 >
                   <Package className="w-4 h-4 mr-2" />
@@ -704,7 +754,7 @@ export default function RoomStudio2D() {
                   {hasFurnitureOnly() && (
                     <Button 
                       className="bg-emerald-600 hover:bg-emerald-700"
-                      onClick={() => window.location.href = '/order-checkout'}
+                      onClick={handleCheckout}
                       data-testid="button-checkout"
                     >
                       <Package className="w-4 h-4 mr-2" />
