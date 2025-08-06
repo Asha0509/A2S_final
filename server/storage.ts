@@ -403,7 +403,7 @@ export class MemStorage implements IStorage {
     // Seed consultants
     const sampleConsultants: InsertConsultant[] = [
       {
-        name: "Dr. Rajesh Sharma",
+        name: "Rajesh Sharma",
         type: "vastu",
         experience: 15,
         rating: 49,
@@ -435,7 +435,7 @@ export class MemStorage implements IStorage {
         price: 4000,
         availability: "Available Today",
         bio: "Contemporary and minimalist designs. Specializes in space optimization and sustainable design solutions.",
-        imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+        
       }
     ];
 
