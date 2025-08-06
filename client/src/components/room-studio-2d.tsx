@@ -11,7 +11,8 @@ import {
   Upload, Video, RotateCcw, ZoomIn, ZoomOut, Save, RotateCw, 
   Sparkles, Eye, UserCheck, Download, Home, Sofa, Armchair, 
   Tv, Bed, Utensils, AirVent, Lightbulb, Palette, Layers,
-  Grid, Move, AlertTriangle, CheckCircle
+  Grid, Move, AlertTriangle, CheckCircle, ShoppingCart, Phone,
+  Package, Calendar
 } from "lucide-react";
 import emptyRoomImage from "@assets/Leerer-weisser-Raum_620x417px_1754411499692.jpg";
 
@@ -45,6 +46,7 @@ export default function RoomStudio2D() {
   const [roomZoom, setRoomZoom] = useState(1);
   const [showGrid, setShowGrid] = useState(true);
   const [collisionAlert, setCollisionAlert] = useState<string | null>(null);
+  const [showCart, setShowCart] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -244,17 +246,50 @@ export default function RoomStudio2D() {
     return null;
   };
 
+  const getCartItems = () => {
+    return placedItems.map(item => {
+      const furniture = getFurnitureById(item.furnitureId);
+      return {
+        ...item,
+        furniture: furniture
+      };
+    }).filter(item => item.furniture);
+  };
+
+  const calculateCartTotal = () => {
+    return getCartItems().reduce((total, item) => total + (item.furniture?.price || 0), 0);
+  };
+
+  const hasFurnitureOnly = () => {
+    const cartItems = getCartItems();
+    return cartItems.every(item => 
+      item.furniture?.category === 'seating' || 
+      item.furniture?.category === 'storage' || 
+      item.furniture?.category === 'beds' ||
+      item.furniture?.category === 'tables'
+    );
+  };
+
+  const hasNonFurnitureItems = () => {
+    const cartItems = getCartItems();
+    return cartItems.some(item => 
+      item.furniture?.category === 'appliances' ||
+      item.furniture?.category === 'paint' ||
+      item.furniture?.category === 'utilities'
+    );
+  };
+
   return (
     <div className="h-screen flex flex-col bg-slate-50">
       {/* Top Toolbar */}
-      <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          <h2 className="text-xl font-bold text-slate-800">Room Studio 2.5D</h2>
+      <div className="bg-white border-b border-slate-200 p-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-6">
+          <h2 className="text-lg lg:text-xl font-bold text-slate-800 whitespace-nowrap">Room Studio 2.5D</h2>
           
           {/* Room Type Selector */}
-          <div className="flex items-center space-x-3">
-            <Label className="text-sm font-medium text-slate-700">Room Type:</Label>
-            <div className="flex space-x-1 bg-slate-100 rounded-lg p-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <Label className="text-sm font-medium text-slate-700 whitespace-nowrap">Room Type:</Label>
+            <div className="flex flex-wrap gap-1 bg-slate-100 rounded-lg p-1">
               {roomTypes.map(room => (
                 <Button
                   key={room.id}
@@ -268,20 +303,23 @@ export default function RoomStudio2D() {
                       description: room.description
                     });
                   }}
-                  className={selectedRoom === room.id ? "bg-teal-600 hover:bg-teal-700 text-white" : ""}
+                  className={`text-xs ${selectedRoom === room.id ? "bg-teal-600 hover:bg-teal-700 text-white" : ""}`}
+                  data-testid={`button-room-${room.id}`}
                 >
-                  <room.icon className="w-4 h-4 mr-2" />
-                  {room.name}
+                  <room.icon className="w-3 h-3 mr-1" />
+                  <span className="hidden sm:inline">{room.name}</span>
+                  <span className="sm:hidden">{room.name.split(' ')[0]}</span>
                 </Button>
               ))}
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1">
             <Button 
               variant="outline" 
               size="sm"
               onClick={() => setRoomRotation(prev => prev - 15)}
+              data-testid="button-rotate-left"
             >
               <RotateCcw className="w-4 h-4" />
             </Button>
@@ -289,6 +327,7 @@ export default function RoomStudio2D() {
               variant="outline" 
               size="sm"
               onClick={() => setRoomRotation(prev => prev + 15)}
+              data-testid="button-rotate-right"
             >
               <RotateCw className="w-4 h-4" />
             </Button>
@@ -296,6 +335,7 @@ export default function RoomStudio2D() {
               variant="outline" 
               size="sm"
               onClick={() => setRoomZoom(prev => Math.min(prev + 0.1, 2))}
+              data-testid="button-zoom-in"
             >
               <ZoomIn className="w-4 h-4" />
             </Button>
@@ -303,6 +343,7 @@ export default function RoomStudio2D() {
               variant="outline" 
               size="sm"
               onClick={() => setRoomZoom(prev => Math.max(prev - 0.1, 0.5))}
+              data-testid="button-zoom-out"
             >
               <ZoomOut className="w-4 h-4" />
             </Button>
@@ -311,32 +352,38 @@ export default function RoomStudio2D() {
               size="sm"
               onClick={() => setShowGrid(!showGrid)}
               className={showGrid ? "bg-teal-50 border-teal-200" : ""}
+              data-testid="button-toggle-grid"
             >
               <Grid className="w-4 h-4" />
             </Button>
           </div>
         </div>
         
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" size="sm" data-testid="button-save-design">
             <Save className="w-4 h-4 mr-1" />
-            Save Design
+            <span className="hidden sm:inline">Save Design</span>
+            <span className="sm:hidden">Save</span>
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" data-testid="button-reset-layout">
             <RotateCcw className="w-4 h-4 mr-1" />
-            Reset Layout
+            <span className="hidden sm:inline">Reset Layout</span>
+            <span className="sm:hidden">Reset</span>
           </Button>
-          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white" size="sm">
+          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white" size="sm" data-testid="button-auto-design">
             <Sparkles className="w-4 h-4 mr-1" />
-            Smart Auto-Design
+            <span className="hidden lg:inline">Smart Auto-Design</span>
+            <span className="lg:hidden">Auto-Design</span>
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => window.location.href = '/book-consultation'} data-testid="button-book-designer">
             <UserCheck className="w-4 h-4 mr-1" />
-            Book Designer
+            <span className="hidden sm:inline">Book Designer</span>
+            <span className="sm:hidden">Book</span>
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" data-testid="button-export-preview">
             <Download className="w-4 h-4 mr-1" />
-            Export Preview
+            <span className="hidden lg:inline">Export Preview</span>
+            <span className="lg:hidden">Export</span>
           </Button>
         </div>
       </div>
@@ -628,43 +675,140 @@ export default function RoomStudio2D() {
         </div>
       </div>
 
-      {/* Bottom Panel - Flooring & Ceiling */}
-      <div className="bg-white border-t border-slate-200 p-4">
-        <div className="flex space-x-8">
-          <div className="flex-1">
-            <h4 className="font-semibold text-slate-800 mb-3">Flooring Options</h4>
-            <div className="flex space-x-4">
-              {floorTypes.map(floor => (
-                <div
-                  key={floor.id}
-                  className={`cursor-pointer p-3 rounded-lg border-2 transition-all ${
-                    selectedFloorType === floor.id ? 'border-teal-500 bg-teal-50' : 'border-slate-200 hover:border-slate-300'
-                  }`}
-                  onClick={() => setSelectedFloorType(floor.id)}
+      {/* Bottom Panel - Cart & Checkout */}
+      {placedItems.length > 0 && (
+        <div className="bg-white border-t border-slate-200 p-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4">
+              <h4 className="font-semibold text-slate-800 flex items-center">
+                <ShoppingCart className="w-5 h-5 mr-2 text-emerald-600" />
+                Cart ({placedItems.length} items)
+              </h4>
+              <div className="text-2xl font-bold text-emerald-600">
+                ₹{(calculateCartTotal() / 1000).toFixed(0)}K
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              {hasFurnitureOnly() && !hasNonFurnitureItems() ? (
+                <Button 
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                  onClick={() => window.location.href = '/order-checkout'}
+                  data-testid="button-checkout"
                 >
-                  <img src={floor.image} alt={floor.name} className="w-16 h-16 object-cover rounded mb-2" />
-                  <p className="text-sm font-medium text-center">{floor.name}</p>
+                  <Package className="w-4 h-4 mr-2" />
+                  Checkout & Install
+                </Button>
+              ) : (
+                <div className="flex space-x-2">
+                  {hasFurnitureOnly() && (
+                    <Button 
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                      onClick={() => window.location.href = '/order-checkout'}
+                      data-testid="button-checkout"
+                    >
+                      <Package className="w-4 h-4 mr-2" />
+                      Checkout Furniture
+                    </Button>
+                  )}
+                  {hasNonFurnitureItems() && (
+                    <Button 
+                      variant="outline"
+                      onClick={() => window.location.href = '/book-consultation'}
+                      data-testid="button-book-visit"
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      Book a Visit
+                    </Button>
+                  )}
                 </div>
-              ))}
+              )}
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowCart(!showCart)}
+                data-testid="button-toggle-cart"
+              >
+                {showCart ? 'Hide Details' : 'View Details'}
+              </Button>
             </div>
           </div>
           
-          <div className="flex-1">
-            <h4 className="font-semibold text-slate-800 mb-3">Ceiling Styles</h4>
-            <div className="flex space-x-4">
-              {ceilingStyles.map(ceiling => (
-                <div
-                  key={ceiling.id}
-                  className="cursor-pointer p-3 rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-all"
-                >
-                  <img src={ceiling.image} alt={ceiling.name} className="w-16 h-16 object-cover rounded mb-2" />
-                  <p className="text-sm font-medium text-center">{ceiling.name}</p>
-                </div>
-              ))}
+          {showCart && (
+            <div className="border-t pt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-40 overflow-y-auto">
+                {getCartItems().map((item) => (
+                  <div key={item.id} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
+                    <img 
+                      src={item.furniture?.image} 
+                      alt={item.furniture?.name} 
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                    <div className="flex-1">
+                      <h5 className="font-medium text-sm">{item.furniture?.name}</h5>
+                      <p className="text-xs text-slate-500">{item.furniture?.dimensions}</p>
+                      <p className="text-sm font-semibold text-emerald-600">
+                        ₹{((item.furniture?.price || 0) / 1000).toFixed(0)}K
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeItem(item.id)}
+                      data-testid={`button-remove-${item.id}`}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Flooring Panel - Only show when no cart items */}
+      {placedItems.length === 0 && (
+        <div className="bg-white border-t border-slate-200 p-4">
+          <div className="flex space-x-8">
+            <div className="flex-1">
+              <h4 className="font-semibold text-slate-800 mb-3">Flooring Options</h4>
+              <div className="flex space-x-4">
+                {floorTypes.map(floor => (
+                  <div
+                    key={floor.id}
+                    className={`cursor-pointer p-3 rounded-lg border-2 transition-all ${
+                      selectedFloorType === floor.id ? 'border-teal-500 bg-teal-50' : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                    onClick={() => setSelectedFloorType(floor.id)}
+                    data-testid={`button-floor-${floor.id}`}
+                  >
+                    <img src={floor.image} alt={floor.name} className="w-16 h-16 object-cover rounded mb-2" />
+                    <p className="text-sm font-medium text-center">{floor.name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="flex-1">
+              <h4 className="font-semibold text-slate-800 mb-3">Ceiling Styles</h4>
+              <div className="flex space-x-4">
+                {ceilingStyles.map(ceiling => (
+                  <div
+                    key={ceiling.id}
+                    className="cursor-pointer p-3 rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-all"
+                    data-testid={`button-ceiling-${ceiling.id}`}
+                  >
+                    <img src={ceiling.image} alt={ceiling.name} className="w-16 h-16 object-cover rounded mb-2" />
+                    <p className="text-sm font-medium text-center">{ceiling.name}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

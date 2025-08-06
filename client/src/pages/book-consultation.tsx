@@ -44,17 +44,10 @@ export default function BookConsultation() {
         title: "Booking Confirmed!",
         description: "Your consultation has been booked successfully. You'll receive a confirmation email shortly.",
       });
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        propertyType: '',
-        consultationType: '',
-        preferredDate: '',
-        requirements: ''
-      });
-      setSelectedTime('');
-      setSelectedConsultant(null);
+      // Redirect to booking success page
+      setTimeout(() => {
+        window.location.href = '/booking-success';
+      }, 1500);
     },
     onError: () => {
       toast({
@@ -100,7 +93,7 @@ export default function BookConsultation() {
       return;
     }
 
-    const selectedConsultantData = consultants?.find(c => c.id === selectedConsultant);
+    const selectedConsultantData = consultants?.find((c: any) => c.id === selectedConsultant);
     
     bookingMutation.mutate({
       userId: "user-1", // Mock user ID
@@ -163,7 +156,7 @@ export default function BookConsultation() {
             Available {selectedType === 'vastu' ? 'Vastu Consultants' : selectedType === 'interior' ? 'Interior Designers' : 'Consultants'}
           </h3>
           
-          {consultants?.map((consultant) => (
+          {consultants?.map((consultant: any) => (
             <ConsultantCard 
               key={consultant.id}
               consultant={consultant}
@@ -308,7 +301,7 @@ export default function BookConsultation() {
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-medium text-slate-800">Consultation Fee</span>
                     <span className="text-xl font-bold text-emerald-600">
-                      ₹{consultants?.find(c => c.id === selectedConsultant)?.price || 0}
+                      ₹{consultants?.find((c: any) => c.id === selectedConsultant)?.price || 0}
                     </span>
                   </div>
                   <p className="text-sm text-slate-600">
