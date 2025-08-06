@@ -247,6 +247,7 @@ export class MemStorage implements IStorage {
           "https://images.unsplash.com/photo-1600607688960-e095ff8ab456?w=800&q=80",
           "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
           "https://images.unsplash.com/photo-1613977257365-aaae5a9817ff?w=800&q=80"
+        
         ],
         ownerName: "Elite Properties",
         ownerContact: "+91 98765 43216",
@@ -411,7 +412,6 @@ export class MemStorage implements IStorage {
         price: 2500,
         availability: "Available Today",
         bio: "Specializes in residential and commercial Vastu analysis. Expert in traditional principles with modern applications.",
-        imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
       },
       {
         name: "Priya Menon",
