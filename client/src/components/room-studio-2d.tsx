@@ -47,6 +47,8 @@ export default function RoomStudio2D() {
   const [showGrid, setShowGrid] = useState(true);
   const [collisionAlert, setCollisionAlert] = useState<string | null>(null);
   const [showCart, setShowCart] = useState(false);
+  const [budgetLimit, setBudgetLimit] = useState(500000); // Default 5L in rupees
+  const [showBudgetAlert, setShowBudgetAlert] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -260,6 +262,23 @@ export default function RoomStudio2D() {
     return getCartItems().reduce((total, item) => total + (item.furniture?.price || 0), 0);
   };
 
+  // Check if cart total exceeds budget limit
+  const checkBudgetLimit = () => {
+    const cartTotal = calculateCartTotal();
+    return cartTotal > budgetLimit;
+  };
+
+  // Format budget amount for display
+  const formatBudgetAmount = (amount: number) => {
+    if (amount >= 100000) {
+      return `₹${(amount / 100000).toFixed(1)}L`;
+    } else if (amount >= 1000) {
+      return `₹${(amount / 1000).toFixed(0)}K`;
+    } else {
+      return `₹${amount}`;
+    }
+  };
+
   const hasFurnitureOnly = () => {
     const cartItems = getCartItems();
     return cartItems.every(item => 
@@ -440,37 +459,74 @@ export default function RoomStudio2D() {
             </Button>
           </div>
           
-          {/* Checkout Buttons */}
-          {placedItems.length > 0 && (
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <ShoppingCart className="w-4 h-4 text-emerald-600" />
-                <span className="font-medium">{placedItems.length} items</span>
-                <span className="font-bold text-emerald-600">
-                  ₹{(calculateCartTotal() / 1000).toFixed(0)}K
+          {/* Budget Scale */}
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-2">
+              <Label className="text-xs font-medium text-slate-600">Budget Limit</Label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="range"
+                  min="2000"
+                  max="1500000"
+                  step="25000"
+                  value={budgetLimit}
+                  onChange={(e) => setBudgetLimit(Number(e.target.value))}
+                  className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                  data-testid="budget-slider"
+                />
+                <span className="text-sm font-medium text-slate-700 min-w-[50px]">
+                  {formatBudgetAmount(budgetLimit)}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowCart(!showCart)}
-                  data-testid="button-view-details"
-                >
-                  {showCart ? 'Hide Details' : 'View Details'}
-                </Button>
-                <Button 
-                  className="bg-emerald-600 hover:bg-emerald-700"
-                  size="sm"
-                  onClick={handleCheckout}
-                  data-testid="button-checkout-top"
-                >
-                  <Package className="w-4 h-4 mr-2" />
-                  Checkout & Install
-                </Button>
-              </div>
             </div>
-          )}
+
+            {/* Checkout Buttons */}
+            {placedItems.length > 0 && (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <ShoppingCart className="w-4 h-4 text-emerald-600" />
+                  <span className="font-medium">{placedItems.length} items</span>
+                  <span className={`font-bold ${checkBudgetLimit() ? 'text-red-600' : 'text-emerald-600'}`}>
+                    ₹{(calculateCartTotal() / 1000).toFixed(0)}K
+                  </span>
+                  {checkBudgetLimit() && (
+                    <span className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded">
+                      Over Budget!
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowCart(!showCart)}
+                    data-testid="button-view-details"
+                  >
+                    {showCart ? 'Hide Details' : 'View Details'}
+                  </Button>
+                  <Button 
+                    className={`${checkBudgetLimit() ? 'bg-red-600 hover:bg-red-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
+                    size="sm"
+                    onClick={() => {
+                      if (checkBudgetLimit()) {
+                        toast({
+                          title: "Budget Exceeded!",
+                          description: `Your cart total (${formatBudgetAmount(calculateCartTotal())}) exceeds your budget limit (${formatBudgetAmount(budgetLimit)}). Please adjust your selections or increase your budget.`,
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+                      handleCheckout();
+                    }}
+                    data-testid="button-checkout-top"
+                  >
+                    <Package className="w-4 h-4 mr-2" />
+                    {checkBudgetLimit() ? 'Over Budget' : 'Checkout & Install'}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
