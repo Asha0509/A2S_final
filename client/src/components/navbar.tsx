@@ -37,21 +37,24 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link href="https://ik.imagekit.io/m1onltwqh/Untitled%20design%20(1).png?updatedAt=1754502471393">
-              <div className="flex items-center space-x-4 cursor-pointer">
-                <div className="w-10 h-10 rounded-lg overflow-hidden">
-                  <img 
-                    src="/attached_assets/Untitled design (1)_1754501430763.png" 
-                    alt="A2S Logo" 
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-slate-800">A2S</h1>
-                  <p className="text-xs text-slate-500">Aesthetics to Spaces</p>
-                </div>
-              </div>
-            </Link>
+           import Link from 'next/link';
+
+<Link href="https://ik.imagekit.io/m1onltwqh/Untitled%20design%20(1).png?updatedAt=1754502471393">
+  <div className="flex items-center space-x-4 cursor-pointer">
+    <div className="w-10 h-10 rounded-lg overflow-hidden">
+      <img 
+        src="https://ik.imagekit.io/m1onltwqh/Untitled%20design%20(1).png?updatedAt=1754502471393" 
+        alt="A2S Logo" 
+        className="w-full h-full object-contain"
+      />
+    </div>
+    <div>
+      <h1 className="text-xl font-bold text-slate-800">A2S</h1>
+      <p className="text-xs text-slate-500">Aesthetics to Spaces</p>
+    </div>
+  </div>
+</Link>
+
 
             {/* Navigation Links - Hidden on mobile */}
             <div className="hidden md:flex items-center space-x-8">
@@ -91,7 +94,7 @@ export default function Navbar() {
               <Avatar className="w-8 h-8">
                 <AvatarImage src="" />
                 <AvatarFallback className="bg-gradient-to-r from-teal-500 to-purple-500 text-white text-sm font-semibold">
-                  JD
+                  A2S
                 </AvatarFallback>
               </Avatar>
             </div>
