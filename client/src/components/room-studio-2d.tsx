@@ -321,8 +321,9 @@ export default function RoomStudio2D() {
   return (
     <div className="h-screen flex flex-col bg-slate-50">
       {/* Top Toolbar */}
-      <div className="bg-white border-b border-slate-200 p-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-6">
+      <div className="bg-white border-b border-slate-200 p-4">
+        {/* First Row - Dashboard Button and Room Studio 2.5D Title */}
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
@@ -333,82 +334,83 @@ export default function RoomStudio2D() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Dashboard
             </Button>
-            <h2 className="text-lg lg:text-xl font-bold text-slate-800 whitespace-nowrap">Room Studio 2.5D</h2>
-          </div>
-          
-          {/* Room Type Selector */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-            <Label className="text-sm font-medium text-slate-700 whitespace-nowrap">Room Type:</Label>
-            <div className="flex flex-wrap gap-1 bg-slate-100 rounded-lg p-1">
-              {roomTypes.map(room => (
-                <Button
-                  key={room.id}
-                  variant={selectedRoom === room.id ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => {
-                    setSelectedRoom(room.id);
-                    setPlacedItems([]); // Clear placed items when changing room
-                    toast({
-                      title: `Switched to ${room.name}`,
-                      description: room.description
-                    });
-                  }}
-                  className={`text-xs ${selectedRoom === room.id ? "bg-teal-600 hover:bg-teal-700 text-white" : ""}`}
-                  data-testid={`button-room-${room.id}`}
-                >
-                  <room.icon className="w-3 h-3 mr-1" />
-                  <span className="hidden sm:inline">{room.name}</span>
-                  <span className="sm:hidden">{room.name.split(' ')[0]}</span>
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-1">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setRoomRotation(prev => prev - 15)}
-              data-testid="button-rotate-left"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setRoomRotation(prev => prev + 15)}
-              data-testid="button-rotate-right"
-            >
-              <RotateCw className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setRoomZoom(prev => Math.min(prev + 0.1, 2))}
-              data-testid="button-zoom-in"
-            >
-              <ZoomIn className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setRoomZoom(prev => Math.max(prev - 0.1, 0.5))}
-              data-testid="button-zoom-out"
-            >
-              <ZoomOut className="w-4 h-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowGrid(!showGrid)}
-              className={showGrid ? "bg-teal-50 border-teal-200" : ""}
-              data-testid="button-toggle-grid"
-            >
-              <Grid className="w-4 h-4" />
-            </Button>
+            <h2 className="text-xl font-bold text-slate-800">Room Studio 2.5D</h2>
           </div>
         </div>
-        
+
+        {/* Second Row - Room Type Selector */}
+        <div className="flex items-center gap-3 mb-4">
+          <Label className="text-sm font-medium text-slate-700 whitespace-nowrap">Room Type:</Label>
+          <div className="flex gap-2">
+            {roomTypes.map(room => (
+              <Button
+                key={room.id}
+                variant={selectedRoom === room.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setSelectedRoom(room.id);
+                  setPlacedItems([]); // Clear placed items when changing room
+                  toast({
+                    title: `Switched to ${room.name}`,
+                    description: room.description
+                  });
+                }}
+                className={`${selectedRoom === room.id ? "bg-teal-600 hover:bg-teal-700 text-white" : ""}`}
+                data-testid={`button-room-${room.id}`}
+              >
+                <room.icon className="w-4 h-4 mr-2" />
+                {room.name}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Third Row - 5 Small Icons */}
+        <div className="flex items-center gap-2 mb-4">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setRoomRotation(prev => prev - 15)}
+            data-testid="button-rotate-left"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setRoomRotation(prev => prev + 15)}
+            data-testid="button-rotate-right"
+          >
+            <RotateCw className="w-4 h-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setRoomZoom(prev => Math.min(prev + 0.1, 2))}
+            data-testid="button-zoom-in"
+          >
+            <ZoomIn className="w-4 h-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setRoomZoom(prev => Math.max(prev - 0.1, 0.5))}
+            data-testid="button-zoom-out"
+          >
+            <ZoomOut className="w-4 h-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowGrid(!showGrid)}
+            className={showGrid ? "bg-teal-50 border-teal-200" : ""}
+            data-testid="button-toggle-grid"
+          >
+            <Grid className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {/* Fourth Row - Rest of the Buttons */}
         <div className="flex flex-wrap items-center gap-2">
           <Button variant="outline" size="sm" data-testid="button-save-design">
             <Save className="w-4 h-4 mr-1" />
