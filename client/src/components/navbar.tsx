@@ -37,7 +37,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link href="/">
+            <Link href="https://ik.imagekit.io/m1onltwqh/Untitled%20design%20(1).png?updatedAt=1754502471393">
               <div className="flex items-center space-x-4 cursor-pointer">
                 <div className="bg-gradient-to-r from-teal-600 to-purple-600 text-white p-2 rounded-lg">
                   <Home className="w-6 h-6" />
