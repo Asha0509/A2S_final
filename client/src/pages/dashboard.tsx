@@ -107,7 +107,7 @@ export default function Dashboard() {
   return (
     <main className="max-w-7xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-slate-800 mb-2">Welcome back, John!</h2>
+        <h2 className="text-3xl font-bold text-slate-800 mb-2">Welcome back!</h2>
         <p className="text-slate-600">Here's what's happening with your properties and designs.</p>
       </div>
 

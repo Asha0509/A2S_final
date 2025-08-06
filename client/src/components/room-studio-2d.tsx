@@ -62,28 +62,28 @@ export default function RoomStudio2D() {
       seating: [
         { id: 'sofa-l-shaped', name: 'L-Shaped Sofa', category: 'seating', icon: Sofa, price: 45000, image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop', dimensions: '240x160cm', roomTypes: ['living_room'] },
         { id: 'accent-chair', name: 'Accent Chair', category: 'seating', icon: Armchair, price: 15000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '70x80cm', roomTypes: ['living_room', 'bedroom'] },
-        { id: 'recliner-leather', name: 'Leather Recliner', category: 'seating', icon: Armchair, price: 25000, image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=100&h=100&fit=crop', dimensions: '85x95cm', roomTypes: ['living_room'] },
-        { id: 'coffee-table', name: 'Glass Coffee Table', category: 'tables', icon: Home, price: 18000, image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop', dimensions: '120x60cm', roomTypes: ['living_room'] },
+        { id: 'recliner-leather', name: 'Leather Recliner', category: 'seating', icon: Armchair, price: 25000, image: 'https://www.royaloakindia.com/media/catalog/product/s/f/sf7912-1_1_.jpg', dimensions: '85x95cm', roomTypes: ['living_room'] },
+        { id: 'coffee-table', name: 'Glass Coffee Table', category: 'tables', icon: Home, price: 18000, image: 'https://vivaninterio.com/wp-content/uploads/2020/05/HTB1vhv8eStYBeNjSspkq6zU8VXap-600x600.jpg', dimensions: '120x60cm', roomTypes: ['living_room'] },
       ],
       storage: [
-        { id: 'tv-unit-modern', name: 'Modern TV Unit', category: 'storage', icon: Tv, price: 32000, image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=100&h=100&fit=crop', dimensions: '180x40cm', roomTypes: ['living_room'] },
-        { id: 'bookshelf-tall', name: 'Tall Bookshelf', category: 'storage', icon: Home, price: 28000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '80x200cm', roomTypes: ['living_room', 'office'] },
+        { id: 'tv-unit-modern', name: 'Modern TV Unit', category: 'storage', icon: Tv, price: 32000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE4wuL82nu76B1eixE4hQD6o8JbFD9sx_VSg&s', dimensions: '180x40cm', roomTypes: ['living_room'] },
+        { id: 'bookshelf-tall', name: 'Tall0&fit=crop Bookshelf', category: 'storage', icon: Home, price: 28000, image: 'https://m.media-amazon.com/images/I/61ewEvPy2wL._UF894,1000_QL80_.jpg', dimensions: '80x200cm', roomTypes: ['living_room', 'office'] },
       ],
       appliances: [
         { id: 'smart-tv-55', name: '55" Smart TV', category: 'appliances', icon: Tv, price: 65000, image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=100&h=100&fit=crop', dimensions: '122x70cm', roomTypes: ['living_room', 'bedroom'] },
-        { id: 'ac-split-1-5', name: '1.5 Ton Split AC', category: 'appliances', icon: AirVent, price: 35000, image: 'https://images.unsplash.com/photo-1551721434-8b94ddff0e6d?w=100&h=100&fit=crop', dimensions: '80x30cm', roomTypes: ['living_room', 'bedroom'] },
+        { id: 'ac-split-1-5', name: '1.5 Ton Split AC', category: 'appliances', icon: AirVent, price: 35000, image: 'https://static.wixstatic.com/media/4af009_50b99ed648a4405980138b37e56d3abb~mv2.jpg/v1/fill/w_980,h_569,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/4af009_50b99ed648a4405980138b37e56d3abb~mv2.jpg', dimensions: '80x30cm', roomTypes: ['living_room', 'bedroom'] },
       ]
     },
     bedroom: {
       beds: [
-        { id: 'king-bed-wooden', name: 'King Size Wooden Bed', category: 'beds', icon: Bed, price: 38000, image: 'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=100&h=100&fit=crop', dimensions: '180x200cm', roomTypes: ['bedroom'] },
-        { id: 'queen-bed-upholstered', name: 'Queen Upholstered Bed', category: 'beds', icon: Bed, price: 32000, image: 'https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=100&h=100&fit=crop', dimensions: '160x200cm', roomTypes: ['bedroom'] },
-        { id: 'single-bed', name: 'Single Platform Bed', category: 'beds', icon: Bed, price: 22000, image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop', dimensions: '90x200cm', roomTypes: ['bedroom'] },
+        { id: 'king-bed-wooden', name: 'King Size Wooden Bed', category: 'beds', icon: Bed, price: 38000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVi001QauSDAvNYpy10wPRi153364DdkQDoQ&s', dimensions: '180x200cm', roomTypes: ['bedroom'] },
+        { id: 'queen-bed-upholstered', name: 'Queen Upholstered Bed', category: 'beds', icon: Bed, price: 32000, image: 'https://store.ashleyfurniture.in/cdn/shop/files/WhatsAppImage2024-10-17at11.57.39AM.jpg?v=1729147390', dimensions: '160x200cm', roomTypes: ['bedroom'] },
+        { id: 'single-bed', name: 'Single Platform Bed', category: 'beds', icon: Bed, price: 22000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ50u4J3BLrmOBFjISPK5z5Z-otlHlp7W1VaQ&s', dimensions: '90x200cm', roomTypes: ['bedroom'] },
       ],
       storage: [
-        { id: 'wardrobe-3-door', name: '3-Door Wardrobe', category: 'storage', icon: Home, price: 55000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '180x60cm', roomTypes: ['bedroom'] },
-        { id: 'nightstand-pair', name: 'Nightstand (Pair)', category: 'storage', icon: Home, price: 12000, image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=100&h=100&fit=crop', dimensions: '45x35cm each', roomTypes: ['bedroom'] },
-        { id: 'dressing-table', name: 'Dressing Table with Mirror', category: 'storage', icon: Home, price: 25000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '120x45cm', roomTypes: ['bedroom'] },
+        { id: 'wardrobe-3-door', name: '3-Door Wardrobe', category: 'storage', icon: Home, price: 55000, image: 'https://www.hometown.in/cdn/shop/files/1_7504be7d-bc30-4ac1-8785-adb268c353cf.jpg?v=1747204836', dimensions: '180x60cm', roomTypes: ['bedroom'] },
+        { id: 'nightstand-pair', name: 'Nightstand (Pair)', category: 'storage', icon: Home, price: 12000, image: 'https://assets.wfcdn.com/im/60381983/resize-h755-w755%5Ecompr-r85/1995/199508970/Aizlyn%20Nightstand.jpg', dimensions: '45x35cm each', roomTypes: ['bedroom'] },
+        { id: 'dressing-table', name: 'Dressing Table with Mirror', category: 'storage', icon: Home, price: 25000, image: 'https://m.media-amazon.com/images/I/51l+PpSMCmL.jpg', dimensions: '120x45cm', roomTypes: ['bedroom'] },
       ],
       seating: [
         { id: 'bedroom-chair', name: 'Bedroom Accent Chair', category: 'seating', icon: Armchair, price: 12000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '60x70cm', roomTypes: ['bedroom'] },
@@ -91,41 +91,41 @@ export default function RoomStudio2D() {
     },
     kitchen: {
       appliances: [
-        { id: 'refrigerator-double', name: 'Double Door Refrigerator', category: 'appliances', icon: Home, price: 85000, image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=100&h=100&fit=crop', dimensions: '70x180cm', roomTypes: ['kitchen'] },
-        { id: 'microwave-convection', name: 'Convection Microwave', category: 'appliances', icon: Home, price: 25000, image: 'https://images.unsplash.com/photo-1574269909862-7a67b8b6b7bc?w=100&h=100&fit=crop', dimensions: '45x35cm', roomTypes: ['kitchen'] },
-        { id: 'dishwasher', name: 'Built-in Dishwasher', category: 'appliances', icon: Home, price: 45000, image: 'https://images.unsplash.com/photo-1574269909862-7a67b8b6b7bc?w=100&h=100&fit=crop', dimensions: '60x85cm', roomTypes: ['kitchen'] },
+        { id: 'refrigerator-double', name: 'Double Door Refrigerator', category: 'appliances', icon: Home, price: 85000, image: 'https://www.lg.com/content/dam/channel/wcms/in/images/refrigerators/gl-i292rpzx_bpzzebn_eail_in_c/GL-I292RPZX-Refrigerators-Front-View-450.jpg', dimensions: '70x180cm', roomTypes: ['kitchen'] },
+        { id: 'microwave-convection', name: 'Convection Microwave', category: 'appliances', icon: Home, price: 25000, image: 'https://www.lg.com/content/dam/channel/wcms/in/images/microwave-ovens/mc2146bv_dbkqiln_eail_in_c/gallery/MC2146BV-Microwave-ovens-Front-view-DZ-01.jpg', dimensions: '45x35cm', roomTypes: ['kitchen'] },
+        { id: 'dishwasher', name: 'Built-in Dishwasher', category: 'appliances', icon: Home, price: 45000, image: 'https://mahajanelectronics.com/cdn/shop/files/23548829_SMV6HMX01I_PGA1_def.webp?v=1741456292&width=3840', dimensions: '60x85cm', roomTypes: ['kitchen'] },
       ],
       storage: [
-        { id: 'kitchen-cabinet-upper', name: 'Upper Kitchen Cabinets', category: 'storage', icon: Home, price: 35000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '200x40cm', roomTypes: ['kitchen'] },
-        { id: 'kitchen-cabinet-base', name: 'Base Kitchen Cabinets', category: 'storage', icon: Home, price: 45000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '200x60cm', roomTypes: ['kitchen'] },
-        { id: 'kitchen-island', name: 'Kitchen Island', category: 'storage', icon: Home, price: 65000, image: 'https://images.unsplash.com/photo-1556909114-8c73f8d8f23e?w=100&h=100&fit=crop', dimensions: '150x80cm', roomTypes: ['kitchen'] },
+        { id: 'kitchen-cabinet-upper', name: 'Upper Kitchen Cabinets', category: 'storage', icon: Home, price: 35000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_JXTmKsrY4SZT09579lbvxCgxVoP4DCw0XA&s', dimensions: '200x40cm', roomTypes: ['kitchen'] },
+        { id: 'kitchen-cabinet-base', name: 'Base Kitchen Cabinets', category: 'storage', icon: Home, price: 45000, image: 'https://decorcabinets.com/wp-content/uploads/2024/08/kitchen-base-cabinets-3-scaled.jpg', dimensions: '200x60cm', roomTypes: ['kitchen'] },
+        { id: 'kitchen-island', name: 'Kitchen Island', category: 'storage', icon: Home, price: 65000, image: 'https://cdn.prod.website-files.com/6296aec5884dc4c8a90970a6/644a64a660908bcdc4b83360_abc41c86.jpeg', dimensions: '150x80cm', roomTypes: ['kitchen'] },
       ]
     },
     dining: {
       tables: [
-        { id: 'dining-table-6', name: '6-Seater Dining Table', category: 'tables', icon: Home, price: 42000, image: 'https://images.unsplash.com/photo-1549497538-303791108f95?w=100&h=100&fit=crop', dimensions: '180x90cm', roomTypes: ['dining'] },
-        { id: 'dining-table-4', name: '4-Seater Dining Table', category: 'tables', icon: Home, price: 28000, image: 'https://images.unsplash.com/photo-1549497538-303791108f95?w=100&h=100&fit=crop', dimensions: '120x80cm', roomTypes: ['dining'] },
+        { id: 'dining-table-6', name: '6-Seater Dining Table', category: 'tables', icon: Home, price: 42000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS051pXByjdvQ1uqwsyvdMEFjS89PwJXHzShg&s', dimensions: '180x90cm', roomTypes: ['dining'] },
+        { id: 'dining-table-4', name: '4-Seater Dining Table', category: 'tables', icon: Home, price: 28000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo1gIfUJuyasNi5GrUeH1JJRIh3Bj1_ZpMcw&s', dimensions: '120x80cm', roomTypes: ['dining'] },
       ],
       seating: [
-        { id: 'dining-chairs-6', name: 'Dining Chairs (Set of 6)', category: 'seating', icon: Armchair, price: 24000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '45x50cm each', roomTypes: ['dining'] },
-        { id: 'dining-chairs-4', name: 'Dining Chairs (Set of 4)', category: 'seating', icon: Armchair, price: 16000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '45x50cm each', roomTypes: ['dining'] },
+        { id: 'dining-chairs-6', name: 'Dining Chairs (Set of 6)', category: 'seating', icon: Armchair, price: 24000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS051pXByjdvQ1uqwsyvdMEFjS89PwJXHzShg&s', dimensions: '45x50cm each', roomTypes: ['dining'] },
+        { id: 'dining-chairs-4', name: 'Dining Chairs (Set of 4)', category: 'seating', icon: Armchair, price: 16000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo1gIfUJuyasNi5GrUeH1JJRIh3Bj1_ZpMcw&s', dimensions: '45x50cm each', roomTypes: ['dining'] },
       ],
       storage: [
-        { id: 'dining-cabinet', name: 'Dining Room Cabinet', category: 'storage', icon: Home, price: 38000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '160x85cm', roomTypes: ['dining'] },
+        { id: 'dining-cabinet', name: 'Dining Room Cabinet', category: 'storage', icon: Home, price: 38000, image: 'https://media.designcafe.com/wp-content/uploads/2019/12/20235011/dining-room-cabinets-for-your-home.jpg', dimensions: '160x85cm', roomTypes: ['dining'] },
       ]
     },
     office: {
       tables: [
-        { id: 'office-desk-l', name: 'L-Shaped Office Desk', category: 'tables', icon: Home, price: 35000, image: 'https://images.unsplash.com/photo-1549497538-303791108f95?w=100&h=100&fit=crop', dimensions: '160x120cm', roomTypes: ['office'] },
-        { id: 'office-desk-simple', name: 'Simple Office Desk', category: 'tables', icon: Home, price: 18000, image: 'https://images.unsplash.com/photo-1549497538-303791108f95?w=100&h=100&fit=crop', dimensions: '120x60cm', roomTypes: ['office'] },
+        { id: 'office-desk-l', name: 'L-Shaped Office Desk', category: 'tables', icon: Home, price: 35000, image: 'https://images-cdn.ubuy.co.in/66e22ac7db5ca11b8d7b8155-tribesigns-71-inch-executive-desk-l.jpg', dimensions: '160x120cm', roomTypes: ['office'] },
+        { id: 'office-desk-simple', name: 'Simple Office Desk', category: 'tables', icon: Home, price: 18000, image: 'https://stepearly.com/cdn/shop/products/falcon_desking.jpg?v=1623402473', dimensions: '120x60cm', roomTypes: ['office'] },
       ],
       seating: [
-        { id: 'office-chair-executive', name: 'Executive Office Chair', category: 'seating', icon: Armchair, price: 22000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '70x70cm', roomTypes: ['office'] },
-        { id: 'office-chair-ergonomic', name: 'Ergonomic Desk Chair', category: 'seating', icon: Armchair, price: 15000, image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&h=100&fit=crop', dimensions: '65x65cm', roomTypes: ['office'] },
+        { id: 'office-chair-executive', name: 'Executive Office Chair', category: 'seating', icon: Armchair, price: 22000, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4C-eJIM9e1TsrWDij35pXx7sW18oXhzhhXQ&s', dimensions: '70x70cm', roomTypes: ['office'] },
+        { id: 'office-chair-ergonomic', name: 'Ergonomic Desk Chair', category: 'seating', icon: Armchair, price: 15000, image: 'https://cdn.shopify.com/s/files/1/0044/1208/0217/files/MTRENVIHBSLTAN_900x.jpg?v=1747893311', dimensions: '65x65cm', roomTypes: ['office'] },
       ],
       storage: [
-        { id: 'bookshelf-office', name: 'Office Bookshelf', category: 'storage', icon: Home, price: 28000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '80x200cm', roomTypes: ['office'] },
-        { id: 'filing-cabinet', name: 'Filing Cabinet', category: 'storage', icon: Home, price: 15000, image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop', dimensions: '40x80cm', roomTypes: ['office'] },
+        { id: 'bookshelf-office', name: 'Office Bookshelf', category: 'storage', icon: Home, price: 28000, image: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjBY0O0tpwTQmBOwn9k5yOLfbSFnfXRWIc2HhEIKEv1pezmbjdhi1OSemZ6b2BuCXn35VJ2Qz5iF4rgxEKtisEc1L6D60SojNoRfeFh6g33AcD1IQNaT_1Iw_d9S4ORKE2uMNvELEPM5r8/s1600/IMG_5382.jpg', dimensions: '80x200cm', roomTypes: ['office'] },
+        { id: 'filing-cabinet', name: 'Filing Cabinet', category: 'storage', icon: Home, price: 15000, image: 'https://images-cdn.ubuy.co.in/6624136193df020e455782a6-space-solutions-18-deep-2-drawer-letter.jpg', dimensions: '40x80cm', roomTypes: ['office'] },
       ]
     }
   };
@@ -147,16 +147,16 @@ export default function RoomStudio2D() {
   ];
 
   const floorTypes = [
-    { id: 'marble', name: 'Italian Marble', image: 'https://images.unsplash.com/photo-1615529179068-ed497e1886ad?w=100&h=100&fit=crop' },
-    { id: 'hardwood', name: 'Oak Hardwood', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=100&h=100&fit=crop' },
-    { id: 'ceramic', name: 'Ceramic Tiles', image: 'https://images.unsplash.com/photo-1594736797933-d0ed2c1ee4c2?w=100&h=100&fit=crop' },
-    { id: 'granite', name: 'Granite Stone', image: 'https://images.unsplash.com/photo-1600566752229-450e5e2c1945?w=100&h=100&fit=crop' },
+    { id: 'marble', name: 'Italian Marble', image: 'https://images.jdmagicbox.com/quickquotes/images_main/italian-beige-marble-slabs-2219807568-8ezklc32.jpg' },
+    { id: 'hardwood', name: 'Oak Hardwood', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRpLpiEwjdKBg6lXaTYRN81bhGm_Wcs7pt9A&s' },
+    { id: 'ceramic', name: 'Ceramic Tiles', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVzwlIa14Me20E2qh7vJt8gwSD15i9kHn4w&s' },
+    { id: 'granite', name: 'Granite Stone', image: 'https://img.edilportale.com/product-thumbs/h_prodotti-74318-rel4c4b538bcdbf401086bdc2ec720d8163.jpg' },
   ];
 
   const ceilingStyles = [
-    { id: 'false-ceiling', name: 'False Ceiling', image: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=100&h=100&fit=crop' },
-    { id: 'recessed-lights', name: 'Recessed Lighting', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' },
-    { id: 'exposed-beam', name: 'Exposed Beams', image: 'https://images.unsplash.com/photo-1600566752734-2b5e0b4a8297?w=100&h=100&fit=crop' },
+    { id: 'false-ceiling', name: 'False Ceiling', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4ji0vihQFofPSIPflZ10yiiq5g0gMQ89BNQ&s' },
+    { id: 'recessed-lights', name: 'Recessed Lighting', image: 'https://www.thespruce.com/thmb/sm5CZ1bbTFhXj0nI_MmQZvmWcKs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/before-you-buy-recessed-lights-2175005-1-4135a493ef234f048ba54a17b828cde1.jpg' },
+    { id: 'exposed-beam', name: 'Exposed Beams', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsGGU593nh5JZXk7QnSpP15hEvJEaeutuuJQ&s' },
   ];
 
   const handleVideoUpload = useCallback(async (file: File) => {
