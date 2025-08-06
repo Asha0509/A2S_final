@@ -38,19 +38,17 @@ export default function Navbar() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
 
-<Link href="https://ik.imagekit.io/m1onltwqh/Untitled%20design%20(1).png?updatedAt=1754502471393">
-  <div className="flex items-center space-x-4 cursor-pointer">
-    <div className="w-10 h-10 rounded-lg overflow-hidden">
-      <img 
-        src="https://ik.imagekit.io/m1onltwqh/Untitled%20design%20(1).png?updatedAt=1754502471393" 
-        alt="A2S Logo" 
-        className="w-full h-full object-contain"
-      />
-    </div>
-    <div>
-      <h1 className="text-xl font-bold text-slate-800">A2S</h1>
-      <p className="text-xs text-slate-500">Aesthetics to Spaces</p>
-    </div>
+<Link href="/" className="flex items-center space-x-4 cursor-pointer">
+  <div className="w-10 h-10 rounded-lg overflow-hidden">
+    <img 
+      src="https://ik.imagekit.io/m1onltwqh/Untitled%20design%20(1).png?updatedAt=1754502471393" 
+      alt="A2S Logo" 
+      className="w-full h-full object-contain"
+    />
+  </div>
+  <div>
+    <h1 className="text-xl font-bold text-slate-800">A2S</h1>
+    <p className="text-xs text-slate-500">Aesthetics to Spaces</p>
   </div>
 </Link>
 
