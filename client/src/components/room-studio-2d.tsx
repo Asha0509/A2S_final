@@ -154,7 +154,7 @@ export default function RoomStudio2D() {
     { id: 'marble', name: 'Italian Marble', image: 'https://images.jdmagicbox.com/quickquotes/images_main/italian-beige-marble-slabs-2219807568-8ezklc32.jpg' },
     { id: 'hardwood', name: 'Oak Hardwood', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRpLpiEwjdKBg6lXaTYRN81bhGm_Wcs7pt9A&s' },
     { id: 'ceramic', name: 'Ceramic Tiles', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJVzwlIa14Me20E2qh7vJt8gwSD15i9kHn4w&s' },
-    { id: 'granite', name: 'Granite Stone', image: 'https://img.edilportale.com/product-thumbs/h_prodotti-74318-rel4c4b538bcdbf401086bdc2ec720d8163.jpg' },
+    { id: 'granite', name: 'Granite Stone', image: 'https://4.imimg.com/data4/UB/SY/MY-3526502/green-granite-stone.jpg' },
   ];
 
   const ceilingStyles = [

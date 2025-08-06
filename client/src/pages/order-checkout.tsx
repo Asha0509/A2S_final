@@ -131,7 +131,7 @@ export default function OrderCheckout() {
                       id="name"
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="John Doe"
+                      placeholder="Asha Jyothi"
                       required
                       data-testid="input-name"
                     />
@@ -143,7 +143,7 @@ export default function OrderCheckout() {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="john@example.com"
+                      placeholder="asha@example.com"
                       required
                       data-testid="input-email"
                     />

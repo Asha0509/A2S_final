@@ -191,7 +191,7 @@ export default function BookConsultation() {
                     id="name"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="John Doe"
+                    placeholder="Asha Jyothi"
                     required
                   />
                 </div>
@@ -202,7 +202,7 @@ export default function BookConsultation() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="john@example.com"
+                    placeholder="asha@example.com"
                     required
                   />
                 </div>
