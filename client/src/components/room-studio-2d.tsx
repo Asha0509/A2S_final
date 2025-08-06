@@ -410,33 +410,67 @@ export default function RoomStudio2D() {
           </Button>
         </div>
 
-        {/* Fourth Row - Rest of the Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" data-testid="button-save-design">
-            <Save className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline">Save Design</span>
-            <span className="sm:hidden">Save</span>
-          </Button>
-          <Button variant="outline" size="sm" data-testid="button-reset-layout">
-            <RotateCcw className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline">Reset Layout</span>
-            <span className="sm:hidden">Reset</span>
-          </Button>
-          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white" size="sm" data-testid="button-auto-design">
-            <Sparkles className="w-4 h-4 mr-1" />
-            <span className="hidden lg:inline">Smart Auto-Design</span>
-            <span className="lg:hidden">Auto-Design</span>
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => window.location.href = '/book-consultation'} data-testid="button-book-designer">
-            <UserCheck className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline">Book Designer</span>
-            <span className="sm:hidden">Book</span>
-          </Button>
-          <Button variant="outline" size="sm" data-testid="button-export-preview">
-            <Download className="w-4 h-4 mr-1" />
-            <span className="hidden lg:inline">Export Preview</span>
-            <span className="lg:hidden">Export</span>
-          </Button>
+        {/* Fourth Row - Buttons with Checkout */}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="sm" data-testid="button-save-design">
+              <Save className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Save Design</span>
+              <span className="sm:hidden">Save</span>
+            </Button>
+            <Button variant="outline" size="sm" data-testid="button-reset-layout">
+              <RotateCcw className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Reset Layout</span>
+              <span className="sm:hidden">Reset</span>
+            </Button>
+            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white" size="sm" data-testid="button-auto-design">
+              <Sparkles className="w-4 h-4 mr-1" />
+              <span className="hidden lg:inline">Smart Auto-Design</span>
+              <span className="lg:hidden">Auto-Design</span>
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => window.location.href = '/book-consultation'} data-testid="button-book-designer">
+              <UserCheck className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Book Designer</span>
+              <span className="sm:hidden">Book</span>
+            </Button>
+            <Button variant="outline" size="sm" data-testid="button-export-preview">
+              <Download className="w-4 h-4 mr-1" />
+              <span className="hidden lg:inline">Export Preview</span>
+              <span className="lg:hidden">Export</span>
+            </Button>
+          </div>
+          
+          {/* Checkout Buttons */}
+          {placedItems.length > 0 && (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <ShoppingCart className="w-4 h-4 text-emerald-600" />
+                <span className="font-medium">{placedItems.length} items</span>
+                <span className="font-bold text-emerald-600">
+                  ₹{(calculateCartTotal() / 1000).toFixed(0)}K
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowCart(!showCart)}
+                  data-testid="button-view-details"
+                >
+                  {showCart ? 'Hide Details' : 'View Details'}
+                </Button>
+                <Button 
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                  size="sm"
+                  onClick={handleCheckout}
+                  data-testid="button-checkout-top"
+                >
+                  <Package className="w-4 h-4 mr-2" />
+                  Checkout & Install
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -727,96 +761,51 @@ export default function RoomStudio2D() {
         </div>
       </div>
 
-      {/* Bottom Panel - Cart & Checkout */}
-      {placedItems.length > 0 && (
+      {/* Bottom Panel - Cart Details (Simplified) */}
+      {placedItems.length > 0 && showCart && (
         <div className="bg-white border-t border-slate-200 p-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-4">
-              <h4 className="font-semibold text-slate-800 flex items-center">
-                <ShoppingCart className="w-5 h-5 mr-2 text-emerald-600" />
-                Cart ({placedItems.length} items)
-              </h4>
-              <div className="text-2xl font-bold text-emerald-600">
-                ₹{(calculateCartTotal() / 1000).toFixed(0)}K
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              {hasFurnitureOnly() && !hasNonFurnitureItems() ? (
-                <Button 
-                  className="bg-emerald-600 hover:bg-emerald-700"
-                  onClick={handleCheckout}
-                  data-testid="button-checkout"
-                >
-                  <Package className="w-4 h-4 mr-2" />
-                  Checkout & Install
-                </Button>
-              ) : (
-                <div className="flex space-x-2">
-                  {hasFurnitureOnly() && (
-                    <Button 
-                      className="bg-emerald-600 hover:bg-emerald-700"
-                      onClick={handleCheckout}
-                      data-testid="button-checkout"
-                    >
-                      <Package className="w-4 h-4 mr-2" />
-                      Checkout Furniture
-                    </Button>
-                  )}
-                  {hasNonFurnitureItems() && (
-                    <Button 
-                      variant="outline"
-                      onClick={() => window.location.href = '/book-consultation'}
-                      data-testid="button-book-visit"
-                    >
-                      <Phone className="w-4 h-4 mr-2" />
-                      Book a Visit
-                    </Button>
-                  )}
-                </div>
-              )}
-              
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setShowCart(!showCart)}
-                data-testid="button-toggle-cart"
-              >
-                {showCart ? 'Hide Details' : 'View Details'}
-              </Button>
-            </div>
+          <div className="mb-4">
+            <h4 className="font-semibold text-slate-800 flex items-center mb-3">
+              <ShoppingCart className="w-5 h-5 mr-2 text-emerald-600" />
+              Cart Details ({placedItems.length} items)
+            </h4>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowCart(false)}
+              data-testid="button-hide-cart"
+              className="mb-3"
+            >
+              Hide Details
+            </Button>
           </div>
           
-          {showCart && (
-            <div className="border-t pt-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-40 overflow-y-auto">
-                {getCartItems().map((item) => (
-                  <div key={item.id} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
-                    <img 
-                      src={item.furniture?.image} 
-                      alt={item.furniture?.name} 
-                      className="w-12 h-12 object-cover rounded"
-                    />
-                    <div className="flex-1">
-                      <h5 className="font-medium text-sm">{item.furniture?.name}</h5>
-                      <p className="text-xs text-slate-500">{item.furniture?.dimensions}</p>
-                      <p className="text-sm font-semibold text-emerald-600">
-                        ₹{((item.furniture?.price || 0) / 1000).toFixed(0)}K
-                      </p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeItem(item.id)}
-                      data-testid={`button-remove-${item.id}`}
-                    >
-                      ×
-                    </Button>
-                  </div>
-                ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-40 overflow-y-auto">
+            {getCartItems().map((item) => (
+              <div key={item.id} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
+                <img 
+                  src={item.furniture?.image} 
+                  alt={item.furniture?.name} 
+                  className="w-12 h-12 object-cover rounded"
+                />
+                <div className="flex-1">
+                  <h5 className="font-medium text-sm">{item.furniture?.name}</h5>
+                  <p className="text-xs text-slate-500">{item.furniture?.dimensions}</p>
+                  <p className="text-sm font-semibold text-emerald-600">
+                    ₹{((item.furniture?.price || 0) / 1000).toFixed(0)}K
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeItem(item.id)}
+                  data-testid={`button-remove-${item.id}`}
+                >
+                  ×
+                </Button>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       )}
       
