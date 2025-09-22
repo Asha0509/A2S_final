@@ -1,6 +1,27 @@
-node_modules
-dist
+# Replit
+.replit
+.replit.nix
+.replitignore
+.replit.env
+.repl
+repl.it
+
+# Python
+venv/
+.env
+__pycache__/
+*.pyc
+.python_packages/
+
+# Node
+node_modules/
+dist/
+build/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS junk
 .DS_Store
-server/public
-vite.config.ts.*
-*.tar.gz
+Thumbs.db
