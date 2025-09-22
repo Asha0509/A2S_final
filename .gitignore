@@ -25,3 +25,7 @@ build/
 # OS junk
 .DS_Store
 Thumbs.db
+*replit*
+.replit*
+.repl
+repl.it
