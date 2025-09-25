@@ -13,27 +13,146 @@ import BookingSuccess from "@/pages/booking-success";
 import OrderCheckout from "@/pages/order-checkout";
 import OrderSuccess from "@/pages/order-success";
 import Checkout from "@/pages/checkout";
+import Login from "@/pages/login";
+import Register from "@/pages/register";
 import Navbar from "@/components/navbar";
+import { ProtectedRoute } from "@/components/protected-route";
 
 function Router() {
   return (
     <div className="min-h-screen bg-slate-50">
-      <Navbar />
       <Switch>
-        <Route path="/" component={Dashboard} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/search" component={PropertySearch} />
-        <Route path="/property-search" component={PropertySearch} />
-        <Route path="/design" component={DesignRoom} />
-        <Route path="/design-room" component={DesignRoom} />
-        <Route path="/ai" component={AiAssistant} />
-        <Route path="/ai-assistant" component={AiAssistant} />
-        <Route path="/booking" component={BookConsultation} />
-        <Route path="/book-consultation" component={BookConsultation} />
-        <Route path="/booking-success" component={BookingSuccess} />
-        <Route path="/order-checkout" component={OrderCheckout} />
-        <Route path="/order-success" component={OrderSuccess} />
-        <Route path="/checkout" component={Checkout} />
+        {/* Authentication routes without navbar */}
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+
+        {/* Protected routes with navbar */}
+        <Route
+          path="/"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <Dashboard />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/dashboard"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <Dashboard />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/search"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <PropertySearch />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/property-search"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <PropertySearch />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/design"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <DesignRoom />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/design-room"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <DesignRoom />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/ai"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <AiAssistant />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/ai-assistant"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <AiAssistant />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/booking"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <BookConsultation />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/book-consultation"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <BookConsultation />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/booking-success"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <BookingSuccess />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/order-checkout"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <OrderCheckout />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/order-success"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <OrderSuccess />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/checkout"
+          component={() => (
+            <ProtectedRoute>
+              <Navbar />
+              <Checkout />
+            </ProtectedRoute>
+          )}
+        />
         <Route component={NotFound} />
       </Switch>
     </div>
