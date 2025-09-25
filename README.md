@@ -15,6 +15,7 @@ A modern property rental and interior design platform built with React, TypeScri
 ## 🛠 Tech Stack
 
 ### Frontend
+
 - **React 18.3** with TypeScript
 - **Vite** for build tooling and development server
 - **Tailwind CSS** for styling
@@ -24,6 +25,7 @@ A modern property rental and interior design platform built with React, TypeScri
 - **Framer Motion** for animations
 
 ### Backend
+
 - **Express.js 4.21** with TypeScript
 - **MongoDB** with native MongoDB driver
 - **bcryptjs** for password hashing
@@ -33,6 +35,7 @@ A modern property rental and interior design platform built with React, TypeScri
 ## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed:
+
 - **Node.js** (version 18 or higher)
 - **npm** (comes with Node.js)
 - **Git**
@@ -76,12 +79,14 @@ NODE_ENV=development
 ### 4. MongoDB Setup
 
 #### Option A: MongoDB Atlas (Recommended)
+
 1. Create a free account at [MongoDB Atlas](https://www.mongodb.com/atlas)
 2. Create a new cluster
 3. Create a database user with read/write permissions
 4. Get your connection string and replace the DATABASE_URL in your `.env` file
 
 #### Option B: Local MongoDB
+
 1. Install MongoDB locally
 2. Start MongoDB service
 3. Use local connection string: `mongodb://localhost:27017/a2s_database`
@@ -89,6 +94,7 @@ NODE_ENV=development
 ### 5. Database Seeding (Optional)
 
 The application will automatically seed the database with sample data on first startup. This includes:
+
 - Sample users (admin@example.com / password123)
 - Properties
 - Consultants
@@ -97,17 +103,21 @@ The application will automatically seed the database with sample data on first s
 ### 6. Start Development Server
 
 #### Option A: Full Stack Development (Recommended)
+
 ```bash
 npm run dev
 ```
+
 This starts both frontend (port 5174) and backend (port 5000) concurrently.
 
 #### Option B: Frontend Only
+
 ```bash
 npm run dev
 ```
 
 #### Option C: Backend Only
+
 ```bash
 npm run dev:server
 ```
@@ -122,6 +132,7 @@ npm run dev:server
 Use these credentials to test the application:
 
 - **Admin User**:
+
   - Email: admin@example.com
   - Password: password123
 
@@ -132,15 +143,18 @@ Use these credentials to test the application:
 ## 🏗 Building for Production
 
 ### 1. Build the Application
+
 ```bash
 npm run build
 ```
 
 This will:
+
 - Build the frontend to `dist/`
 - Bundle the backend to `dist/index.js`
 
 ### 2. Start Production Server
+
 ```bash
 npm start
 ```
@@ -176,26 +190,29 @@ A2S_final/
 
 ## 🧪 Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server (frontend + backend) |
-| `npm run dev:server` | Start backend server only |
-| `npm run build` | Build for production |
-| `npm run build:frontend` | Build frontend only |
-| `npm run build:backend` | Build backend only |
-| `npm start` | Start production server |
-| `npm run check` | TypeScript type checking |
+| Command                  | Description                                   |
+| ------------------------ | --------------------------------------------- |
+| `npm run dev`            | Start development server (frontend + backend) |
+| `npm run dev:server`     | Start backend server only                     |
+| `npm run build`          | Build for production                          |
+| `npm run build:frontend` | Build frontend only                           |
+| `npm run build:backend`  | Build backend only                            |
+| `npm start`              | Start production server                       |
+| `npm run check`          | TypeScript type checking                      |
 
 ## 🔧 Configuration
 
 ### Vite Configuration
+
 The project uses Vite for the frontend with:
+
 - React plugin
 - TypeScript support
 - Tailwind CSS integration
 - Proxy configuration for API calls
 
 ### Database Configuration
+
 - **Production**: MongoDB Atlas
 - **Development**: Local MongoDB or Atlas
 - **Seeding**: Automatic on first startup
@@ -205,26 +222,34 @@ The project uses Vite for the frontend with:
 ### Common Issues
 
 #### 1. Database Connection Error
+
 ```
 Error: DATABASE_URL environment variable is required
 ```
+
 **Solution**: Ensure your `.env` file contains a valid MongoDB connection string.
 
 #### 2. Port Already in Use
+
 ```
 Error: Port 5000 is already in use
 ```
+
 **Solution**: Kill the process using port 5000 or change the PORT in your `.env` file.
 
 #### 3. Module Not Found Errors
+
 **Solution**: Delete `node_modules` and reinstall dependencies:
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
 ```
 
 #### 4. Build Errors
+
 **Solution**: Run type checking to identify TypeScript errors:
+
 ```bash
 npm run check
 ```
@@ -232,6 +257,7 @@ npm run check
 ### Environment Variables Checklist
 
 Ensure these environment variables are set:
+
 - ✅ `DATABASE_URL` - MongoDB connection string
 - ✅ `SESSION_SECRET` - Random secret for session encryption
 - ⚠️ `STRIPE_SECRET_KEY` - Optional for payments
