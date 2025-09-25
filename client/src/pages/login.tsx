@@ -212,6 +212,7 @@ export default function Login() {
             </div>
 
             {/* Demo credentials */}
+            {/*
             <div className="mt-4 p-3 bg-gray-50 rounded-lg">
               <p className="text-xs text-gray-500 mb-2">Demo credentials:</p>
               <div className="text-xs text-gray-600 space-y-1">
@@ -222,7 +223,7 @@ export default function Login() {
                   Password: <span className="font-mono">password123</span>
                 </p>
               </div>
-            </div>
+            </div>*/}
           </CardContent>
         </Card>
       </div>
