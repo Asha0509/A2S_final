@@ -1,27 +1,190 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { 
-  insertPropertySchema, 
-  insertRoomDesignSchema, 
-  insertBookingSchema, 
+import {
+  insertPropertySchema,
+  insertRoomDesignSchema,
+  insertBookingSchema,
   insertAiChatSchema,
   insertCartItemSchema,
-  insertOrderSchema
+  insertOrderSchema,
+  insertUserSchema,
 } from "@shared/schema";
+import bcrypt from "bcryptjs";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Authentication Routes
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      console.log("Registration attempt:", {
+        ...req.body,
+        password: "[REDACTED]",
+      });
+
+      // Validate request body exists
+      if (!req.body) {
+        return res.status(400).json({
+          success: false,
+          message: "Request body is required",
+        });
+      }
+
+      const validatedData = insertUserSchema.parse(req.body);
+      console.log("Validation successful for user:", validatedData.username);
+
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(
+        validatedData.username
+      );
+      if (existingUser) {
+        console.log("Username already exists:", validatedData.username);
+        return res.status(400).json({
+          success: false,
+          message: "Username already exists",
+        });
+      }
+
+      // Hash password
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(
+        validatedData.password,
+        saltRounds
+      );
+
+      // Create user
+      const userData = {
+        ...validatedData,
+        password: hashedPassword,
+      };
+
+      console.log("Creating user with data:", {
+        ...userData,
+        password: "[REDACTED]",
+      });
+      const user = await storage.createUser(userData);
+      console.log("User created successfully:", user.id);
+
+      // Return user without password
+      const { password: _, ...userResponse } = user;
+
+      res.status(201).json({
+        success: true,
+        user: userResponse,
+        message: "Account created successfully",
+      });
+    } catch (error: any) {
+      console.error("Registration error:", error);
+
+      if (error.name === "ZodError") {
+        const errorMessages =
+          error.errors
+            ?.map((e: any) => `${e.path.join(".")}: ${e.message}`)
+            .join(", ") || "Invalid input data";
+        return res.status(400).json({
+          success: false,
+          message: `Validation error: ${errorMessages}`,
+          details: error.errors,
+        });
+      }
+
+      if (
+        error.message?.includes("duplicate") ||
+        error.message?.includes("unique")
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Username or email already exists",
+        });
+      }
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to create account - server error",
+        error:
+          process.env.NODE_ENV === "development" ? error.message : undefined,
+      });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      console.log("Login attempt for:", req.body?.username);
+
+      const { username, password } = req.body;
+
+      if (!username || !password) {
+        return res.status(400).json({
+          success: false,
+          message: "Username and password are required",
+        });
+      }
+
+      // Get user by username or email
+      let user = await storage.getUserByUsername(username);
+
+      // If not found by username, try by email
+      if (!user && username.includes("@")) {
+        // We need to implement getUserByEmail, but for now let's check in the existing method
+        user = await storage.getUserByUsername(username);
+      }
+
+      if (!user) {
+        console.log("User not found:", username);
+        return res.status(401).json({
+          success: false,
+          message: "Invalid username or password",
+        });
+      }
+
+      // Verify password
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        console.log("Invalid password for user:", username);
+        return res.status(401).json({
+          success: false,
+          message: "Invalid username or password",
+        });
+      }
+
+      console.log("Login successful for user:", username);
+      // Return user without password
+      const { password: _, ...userResponse } = user;
+
+      res.json({
+        success: true,
+        user: userResponse,
+        message: "Login successful",
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to authenticate - server error",
+        error:
+          process.env.NODE_ENV === "development"
+            ? (error as Error).message
+            : undefined,
+      });
+    }
+  });
+
   // Properties
   app.get("/api/properties", async (req, res) => {
     try {
       const filters = {
         purpose: req.query.purpose as string,
-        minPrice: req.query.minPrice ? parseInt(req.query.minPrice as string) : undefined,
-        maxPrice: req.query.maxPrice ? parseInt(req.query.maxPrice as string) : undefined,
+        minPrice: req.query.minPrice
+          ? parseInt(req.query.minPrice as string)
+          : undefined,
+        maxPrice: req.query.maxPrice
+          ? parseInt(req.query.maxPrice as string)
+          : undefined,
         location: req.query.location as string,
         propertyType: req.query.propertyType as string,
         facing: req.query.facing as string,
-        amenities: req.query.amenities ? (req.query.amenities as string).split(',') : undefined,
+        amenities: req.query.amenities
+          ? (req.query.amenities as string).split(",")
+          : undefined,
       };
 
       const properties = await storage.getProperties(filters);
@@ -60,7 +223,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
-      
+
       const designs = await storage.getRoomDesignsByUser(userId);
       res.json(designs);
     } catch (error) {
@@ -130,7 +293,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
-      
+
       const bookings = await storage.getBookingsByUser(userId);
       res.json(bookings);
     } catch (error) {
@@ -145,7 +308,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
-      
+
       const chats = await storage.getChatsByUser(userId);
       res.json(chats);
     } catch (error) {
@@ -181,7 +344,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { message } = req.body;
       const chat = await storage.getChat(req.params.id);
-      
+
       if (!chat) {
         return res.status(404).json({ message: "Chat not found" });
       }
@@ -194,54 +357,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
         suggestions: any[];
       } = {
         role: "assistant",
-        content: "I'm here to help you with property searches and room designs. Could you please provide more specific details about what you're looking for?",
+        content:
+          "I'm here to help you with property searches and room designs. Could you please provide more specific details about what you're looking for?",
         timestamp: new Date().toISOString(),
-        suggestions: []
+        suggestions: [],
       };
 
       const lowerMessage = message.toLowerCase();
-      
-      if (lowerMessage.includes("property") || lowerMessage.includes("plot") || lowerMessage.includes("land")) {
+
+      if (
+        lowerMessage.includes("property") ||
+        lowerMessage.includes("plot") ||
+        lowerMessage.includes("land")
+      ) {
         const properties = await storage.getProperties();
         const relevantProperties = properties.slice(0, 2);
-        
+
         aiResponse = {
           role: "assistant",
-          content: "I found some great properties that match your requirements! Here are my top recommendations:",
+          content:
+            "I found some great properties that match your requirements! Here are my top recommendations:",
           timestamp: new Date().toISOString(),
-          suggestions: relevantProperties.map(p => ({
+          suggestions: relevantProperties.map((p) => ({
             type: "property" as const,
             id: p.id,
             title: p.title,
             location: p.location,
             price: p.price,
             image: p.images?.[0] || "",
-            action: "View Property"
-          }))
+            action: "View Property",
+          })),
         };
-      } else if (lowerMessage.includes("design") || lowerMessage.includes("room") || lowerMessage.includes("interior")) {
+      } else if (
+        lowerMessage.includes("design") ||
+        lowerMessage.includes("room") ||
+        lowerMessage.includes("interior")
+      ) {
         aiResponse = {
           role: "assistant",
-          content: "Perfect choice! I can help you create beautiful room designs. Here's a concept based on your preferences:",
+          content:
+            "Perfect choice! I can help you create beautiful room designs. Here's a concept based on your preferences:",
           timestamp: new Date().toISOString(),
-          suggestions: [{
-            type: "design" as const,
-            title: "Modern Living Room Design",
-            description: "Features: Teal accent wall, wooden furniture, modern lighting",
-            image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300",
-            action: "Start Designing"
-          }]
+          suggestions: [
+            {
+              type: "design" as const,
+              title: "Modern Living Room Design",
+              description:
+                "Features: Teal accent wall, wooden furniture, modern lighting",
+              image:
+                "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300",
+              action: "Start Designing",
+            },
+          ],
         };
       }
 
       const updatedMessages = [
-        ...(chat.messages as any[] || []),
+        ...((chat.messages as any[]) || []),
         {
           role: "user",
           content: message,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         },
-        aiResponse
+        aiResponse,
       ];
 
       const updated = await storage.updateChat(req.params.id, updatedMessages);
@@ -258,7 +436,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
-      
+
       const savedProperties = await storage.getSavedPropertiesByUser(userId);
       const propertiesWithDetails = await Promise.all(
         savedProperties.map(async (sp) => {
@@ -266,7 +444,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return { ...sp, property };
         })
       );
-      
+
       res.json(propertiesWithDetails);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch saved properties" });
@@ -301,7 +479,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/furniture", async (req, res) => {
     try {
       const roomType = req.query.roomType as string;
-      const furniture = await storage.getFurnitureByRoom(roomType || 'living_room');
+      const furniture = await storage.getFurnitureByRoom(
+        roomType || "living_room"
+      );
       res.json(furniture);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch furniture" });
@@ -326,7 +506,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const cartItems = await storage.getCartByUser(req.params.userId);
       const cartWithDetails = await Promise.all(
         cartItems.map(async (item) => {
-          const furniture = await storage.getFurnitureItem(item.furnitureId || "");
+          const furniture = await storage.getFurnitureItem(
+            item.furnitureId || ""
+          );
           return { ...item, furniture };
         })
       );
@@ -395,12 +577,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertOrderSchema.parse(req.body);
       const order = await storage.createOrder(validatedData);
-      
+
       // Clear the cart after successful order
       if (validatedData.userId) {
         await storage.clearCart(validatedData.userId);
       }
-      
+
       res.status(201).json(order);
     } catch (error) {
       res.status(400).json({ message: "Failed to create order" });
